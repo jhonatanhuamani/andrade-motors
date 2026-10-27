@@ -1,0 +1,161 @@
+{
+  "AM-ACC-001": {
+    "sku": "AM-ACC-001",
+    "nombre": "Casco HJC RPHA 11",
+    "categoria": "Accesorios",
+    "precio": 1250,
+    "stock": 16,
+    "descripcion": "Diseñado para quienes disfrutan cada curva. Un casco integral de perfil deportivo, con un equilibrio excepcional entre confort, ventilación y protección.",
+    "imagenAsset": "assets/images/productos/casco_hjc.png",
+    "caracteristicas": [
+      "Carcasa de construcción ligera",
+      "Visera preparada para sistema antiempañante",
+      "Ventilación multicanal",
+      "Interior desmontable y lavable"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 4.8,
+    "resenas": 120
+  },
+  "AM-REP-004": {
+    "sku": "AM-REP-004",
+    "nombre": "Pastillas de freno Brembo",
+    "categoria": "Repuestos",
+    "precio": 180,
+    "stock": 3,
+    "descripcion": "Control preciso en cada frenada. Un recambio de alto rendimiento para una respuesta progresiva y consistente.",
+    "imagenAsset": "assets/images/productos/pastillas_brembo.png",
+    "caracteristicas": [
+      "Juego de dos pastillas",
+      "Frenado progresivo",
+      "Verificar referencia de la pinza"
+    ],
+    "compatibilidad": [
+      "Honda*",
+      "Yamaha*",
+      "Bajaj*"
+    ],
+    "rating": 4.8,
+    "resenas": 120
+  },
+  "AM-ACE-002": {
+    "sku": "AM-ACE-002",
+    "nombre": "Aceite Motul 7100 10W-40",
+    "categoria": "Aceites",
+    "precio": 85,
+    "stock": 8,
+    "descripcion": "Cuida el corazón de tu moto. Lubricante sintético para motores de cuatro tiempos y una respuesta suave en cada recorrido.",
+    "imagenAsset": "assets/images/productos/aceite_motul.png",
+    "caracteristicas": [
+      "Presentación de 1 litro",
+      "Viscosidad 10W-40",
+      "Para motores de cuatro tiempos"
+    ],
+    "compatibilidad": [
+      "Motores 4T*"
+    ],
+    "rating": 4.8,
+    "resenas": 120
+  },
+  "AM-REP-007": {
+    "sku": "AM-REP-007",
+    "nombre": "Cadena DID 520VX3",
+    "categoria": "Repuestos",
+    "precio": 280,
+    "stock": 5,
+    "descripcion": "Transmite toda la energía de tu motor con una cadena pensada para acompañarte en recorridos exigentes.",
+    "imagenAsset": "assets/images/productos/cadena_did.png",
+    "caracteristicas": [
+      "Paso 520",
+      "Sellado de baja fricción",
+      "Verificar longitud requerida"
+    ],
+    "compatibilidad": [
+      "Honda*",
+      "Yamaha*",
+      "Bajaj*"
+    ],
+    "rating": 4.8,
+    "resenas": 120
+  },
+  "AM-REP-006": {
+    "sku": "AM-REP-006",
+    "nombre": "Kit de arrastre RK",
+    "categoria": "Repuestos",
+    "precio": 420,
+    "stock": 7,
+    "descripcion": "Renueva la transmisión con un conjunto equilibrado de cadena, piñón y catalina. Precisión para seguir sumando kilómetros.",
+    "imagenAsset": "assets/images/productos/kit_arrastre.png",
+    "caracteristicas": [
+      "Incluye cadena, piñón y catalina",
+      "Componentes resistentes al desgaste",
+      "Seleccionar referencia según modelo"
+    ],
+    "compatibilidad": [
+      "Honda*",
+      "Yamaha*",
+      "Bajaj*"
+    ],
+    "rating": 4.8,
+    "resenas": 120
+  },
+  "AM-ACC-008": {
+    "sku": "AM-ACC-008",
+    "nombre": "Escape deportivo Akrapovic",
+    "categoria": "Accesorios",
+    "precio": 1890,
+    "stock": 4,
+    "descripcion": "Una silueta deportiva y un acabado de carácter para transformar la presencia de tu motocicleta.",
+    "imagenAsset": "assets/images/productos/escape_akrapovic.png",
+    "caracteristicas": [
+      "Acabado deportivo",
+      "Construcción ligera",
+      "Consultar montaje y homologación"
+    ],
+    "compatibilidad": [
+      "Según referencia*"
+    ],
+    "rating": 4.8,
+    "resenas": 120
+  },
+  "AM-LLA-003": {
+    "sku": "AM-LLA-003",
+    "nombre": "Llanta Michelin Pilot",
+    "categoria": "Llantas",
+    "precio": 380,
+    "stock": 9,
+    "descripcion": "Confianza sobre el asfalto. Una llanta de perfil deportivo para disfrutar de una conducción precisa en ciudad y carretera.",
+    "imagenAsset": "assets/images/productos/llanta_michelin.png",
+    "caracteristicas": [
+      "Uso urbano y carretera",
+      "Diseño de drenaje",
+      "Confirmar medida de aro y neumático"
+    ],
+    "compatibilidad": [
+      "Según medida*"
+    ],
+    "rating": 4.8,
+    "resenas": 120
+  },
+  "AM-ACC-005": {
+    "sku": "AM-ACC-005",
+    "nombre": "Guantes Racing Pro",
+    "categoria": "Accesorios",
+    "precio": 145,
+    "stock": 12,
+    "descripcion": "Siente el control en tus manos. Protección, ajuste y comodidad para acompañarte en cada nueva ruta.",
+    "imagenAsset": "assets/images/productos/guantes_racing.png",
+    "caracteristicas": [
+      "Protección de nudillos",
+      "Palma antideslizante",
+      "Cierre ajustable"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 4.8,
+    "resenas": 120
+  }
+}
