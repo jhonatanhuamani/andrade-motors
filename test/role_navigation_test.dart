@@ -62,9 +62,9 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         tester.widget<CatalogoScreen>(find.byType(CatalogoScreen)).productos,
-        hasLength(8),
+        hasLength(demo.productos.length),
       );
-      expect(find.text('8 productos'), findsOneWidget);
+      expect(find.text('${demo.productos.length} productos'), findsOneWidget);
     },
   );
 
@@ -132,7 +132,7 @@ void main() {
       await abrirModuloAdmin(tester, 1);
       expect(
         tester.widget<AdminProducts>(find.byType(AdminProducts)).productos,
-        hasLength(8),
+        hasLength(demo.productos.length),
       );
       final agregar = find.widgetWithText(FilledButton, 'Agregar producto');
       expect(tester.widget<FilledButton>(agregar).onPressed, isNotNull);
