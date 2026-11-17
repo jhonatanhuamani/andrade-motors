@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class Producto {
   const Producto({
     this.imagenAsset,
+    this.imagenUrl,
+    this.activo = true,
     this.compatibilidad = const ['Consultar por modelo'],
     this.rating = 4.8,
     this.resenas = 120,
@@ -16,6 +18,8 @@ class Producto {
     required this.caracteristicas,
   });
   final String? imagenAsset;
+  final String? imagenUrl;
+  final bool activo;
   final List<String> compatibilidad;
   final double rating;
   final int resenas;

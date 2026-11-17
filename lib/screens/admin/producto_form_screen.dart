@@ -1,3 +1,7 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
+import 'package:image_picker/image_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +18,7 @@ import '../../widgets/producto_preview.dart';
 class ProductoFormScreen extends StatefulWidget {
   const ProductoFormScreen({super.key, this.producto});
   final Producto? producto;
+
   @override
   State<ProductoFormScreen> createState() => _ProductoFormScreenState();
 }
@@ -23,6 +28,9 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
   late final Map<String, TextEditingController> _campos;
   String? _categoria, _imagen, _error;
   bool _guardando = false;
+  bool _seleccionando = false;
+  bool _activo = true;
+  Uint8List? _fotografia;
   bool get _editando => widget.producto != null;
 
   @override
@@ -31,6 +39,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
     final p = widget.producto;
     _categoria = p?.categoria;
     _imagen = p?.imagenAsset;
+    _activo = p?.activo ?? true;
     _campos = {
       'sku': TextEditingController(text: p?.sku ?? ''),
       'nombre': TextEditingController(text: p?.nombre ?? ''),
@@ -53,6 +62,53 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
           .map((v) => v.trim())
           .where((v) => v.isNotEmpty)
           .toList();
+  Future<void> _seleccionarFotografia() async {
+    setState(() => _seleccionando = true);
+    try {
+      final archivo = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1800,
+        maxHeight: 1800,
+        imageQuality: 85,
+      );
+      if (archivo == null) return;
+      if (await archivo.length() > 10 * 1024 * 1024) {
+        throw const FormatException(
+          'Selecciona una fotografía de hasta 10 MB.',
+        );
+      }
+      final codec = await ui.instantiateImageCodec(await archivo.readAsBytes());
+      try {
+        final frame = await codec.getNextFrame();
+        try {
+          final data = await frame.image.toByteData(
+            format: ui.ImageByteFormat.png,
+          );
+          if (data == null || data.lengthInBytes > 10 * 1024 * 1024) {
+            throw const FormatException(
+              'La fotografía procesada supera 10 MB.',
+            );
+          }
+          if (mounted) {
+            setState(() {
+              _fotografia = data.buffer.asUint8List();
+              _error = null;
+            });
+          }
+        } finally {
+          frame.image.dispose();
+        }
+      } finally {
+        codec.dispose();
+      }
+    } catch (error) {
+      if (mounted) {
+        setState(() => _error = 'No se pudo seleccionar la fotografía: $error');
+      }
+    } finally {
+      if (mounted) setState(() => _seleccionando = false);
+    }
+  }
 
   Future<void> _guardar() async {
     if (_guardando || !_form.currentState!.validate()) return;
@@ -72,6 +128,9 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
       caracteristicas: _lista('caracteristicas'),
       compatibilidad: _lista('compatibilidad'),
       imagenAsset: _imagen,
+      imagenUrl: widget.producto?.imagenUrl,
+      activo: _activo,
+      fotografia: _fotografia,
     );
     setState(() {
       _guardando = true;
@@ -247,7 +306,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                                   ),
                                   const SizedBox(height: 8),
                                   const Text(
-                                    'Se calcula con el stock. La activación independiente sigue pendiente.',
+                                    'La disponibilidad depende del stock.',
                                     style: TextStyle(
                                       fontSize: 10,
                                       color: AppTheme.secundario,
@@ -257,6 +316,14 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                                 ],
                               );
                             },
+                          ),
+                          SwitchListTile(
+                            title: const Text('Activo'),
+                            subtitle: const Text('Visible para clientes'),
+                            value: _activo,
+                            onChanged: _guardando
+                                ? null
+                                : (v) => setState(() => _activo = v),
                           ),
                           _campo('descripcion', 'Descripción', lineas: 4),
                           _campo(
@@ -300,28 +367,46 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                                     ),
                             ),
                           const SizedBox(height: 12),
+                          OutlinedButton.icon(
+                            onPressed: _guardando || _seleccionando
+                                ? null
+                                : _seleccionarFotografia,
+                            icon: const Icon(Icons.add_a_photo_outlined),
+                            label: Text(
+                              _seleccionando
+                                  ? 'Procesando…'
+                                  : 'Seleccionar fotografía',
+                            ),
+                          ),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(18),
-                            child: ProductoPreview(
-                              producto: Producto(
-                                sku: _texto('sku'),
-                                nombre: _texto('nombre'),
-                                categoria: _categoria ?? '',
-                                precio: 0,
-                                stock: 0,
-                                descripcion: '',
-                                caracteristicas: const [],
-                                imagenAsset: _imagen,
-                                icono: Icons.inventory_2_outlined,
-                              ),
-                              height: 170,
-                            ),
+                            child: _fotografia != null
+                                ? Image.memory(
+                                    _fotografia!,
+                                    height: 170,
+                                    fit: BoxFit.contain,
+                                  )
+                                : ProductoPreview(
+                                    producto: Producto(
+                                      sku: _texto('sku'),
+                                      nombre: _texto('nombre'),
+                                      categoria: _categoria ?? '',
+                                      precio: 0,
+                                      stock: 0,
+                                      descripcion: '',
+                                      caracteristicas: const [],
+                                      imagenAsset: _imagen,
+                                      imagenUrl: widget.producto?.imagenUrl,
+                                      icono: Icons.inventory_2_outlined,
+                                    ),
+                                    height: 170,
+                                  ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             _editando
-                                ? 'La imagen actual se conserva. Subir o cambiar fotografías se implementará posteriormente.'
-                                : 'Solo recursos locales existentes. La subida de fotografías se implementará posteriormente.',
+                                ? 'Si no seleccionas otra fotografía, se conserva la actual.'
+                                : 'Puedes seleccionar una fotografía o conservar el respaldo local.',
                             style: const TextStyle(
                               fontSize: 10,
                               color: AppTheme.secundario,
@@ -340,7 +425,9 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                           const SizedBox(height: 24),
                           FilledButton.icon(
                             key: const ValueKey('producto-guardar'),
-                            onPressed: _guardando ? null : _guardar,
+                            onPressed: _guardando || _seleccionando
+                                ? null
+                                : _guardar,
                             icon: _guardando
                                 ? const SizedBox(
                                     width: 18,
@@ -355,7 +442,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                                   ? 'Guardando…'
                                   : _editando
                                   ? 'Guardar cambios'
-                                  : 'Guardar',
+                                  : 'Guardar producto',
                             ),
                           ),
                         ],

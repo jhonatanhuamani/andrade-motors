@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Mismo custom claim que comprueba FirebaseAdminAuthService.
+    function admin() {
+      return request.auth != null
+        && ('admin' in request.auth.token)
+        && request.auth.token.admin == true;
+    }
+
+    function productoValido() {
+      let p = request.resource.data;
+      return p.nombre is string && p.nombre.size() > 0
+        && p.categoria is string && p.categoria.size() > 0
+        && p.descripcion is string && p.descripcion.size() > 0
+        && p.precio is number && p.precio > 0
+        && p.stock is int && p.stock >= 0
+        && p.activo is bool
+        && (!('imagenUrl' in p) || p.imagenUrl == null
+          || (p.imagenUrl is string && p.imagenUrl.matches('https://.*')))
+        && p.createdAt is timestamp
+        && p.updatedAt == request.time;
+    }
+
+    // Unica coleccion accedida por el codigo actual.
+    match /productos/{productId} {
+      allow read: if admin() || resource.data.activo == true;
+      allow create: if admin() && productoValido()
+        && request.resource.data.createdAt == request.time;
+      allow update: if admin() && productoValido()
+        && (('createdAt' in resource.data)
+          ? request.resource.data.createdAt == resource.data.createdAt
+          : request.resource.data.createdAt == request.time);
+      allow delete: if admin();
+    }
+
+    // Usuarios/perfil: Firebase Authentication, sin usuarios/{uid}.
+    // Servicios, reservas, inventario, pedidos y configuracion:
+    // datos locales o modulos remotos pendientes; sin colecciones propias.
+    // No conceder permisos a esquemas que todavia no implementa la app.
+    // Integrar reglas remotas ajenas al repositorio antes de publicar.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

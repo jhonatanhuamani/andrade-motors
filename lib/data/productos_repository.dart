@@ -7,6 +7,7 @@ import '../auth/admin_auth_service.dart';
 import 'datos_demo.dart' as demo;
 import 'producto_edicion.dart';
 import 'productos_escritura.dart';
+import 'productos_fotografias.dart';
 
 /// Una fila contiene el ID del documento y sus campos, sin objetos visuales.
 typedef CargarProductos = Future<Map<String, Map<String, dynamic>>> Function();
@@ -30,12 +31,16 @@ class ProductosRepository {
     this._cargar,
     this._authService,
     this._escritura,
+    this.fotografias,
   });
 
   final FirebaseFirestore? _firestore;
   final CargarProductos? _cargar;
   final AdminAuthService? _authService;
   final ProductosEscritura? _escritura;
+  final ProductosFotografias? fotografias;
+  ProductosFotografias get _fotos =>
+      fotografias ?? FirebaseProductosFotografias();
 
   Future<void> _autorizar() async {
     final auth = _authService ?? FirebaseAdminAuthService();
@@ -67,16 +72,22 @@ class ProductosRepository {
       'sku': datos.sku,
       ...datos.camposEditables(),
       'imagenAsset': datos.imagenAsset,
+      'imagenUrl': datos.imagenUrl,
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
       // Un producto nuevo todavía no tiene reseñas.
       'rating': 0.0,
       'resenas': 0,
     };
-    final confirmado = await _almacen.crearSiAusente(
-      datos.sku,
-      documento,
-      _autorizar,
-    );
-    return _conservarIdentidad(desdeDocumento(datos.sku, confirmado));
+    return _guardarConFotografia(datos, (url) async {
+      if (url != null) documento['imagenUrl'] = url;
+      final confirmado = await _almacen.crearSiAusente(
+        datos.sku,
+        documento,
+        _autorizar,
+      );
+      return _conservarIdentidad(desdeDocumento(datos.sku, confirmado));
+    });
   }
 
   Future<Producto> actualizarProducto(
@@ -88,12 +99,49 @@ class ProductosRepository {
       throw const FormatException('El SKU del producto no se puede modificar.');
     }
     await _autorizar();
-    final confirmado = await _almacen.actualizarExistente(
-      skuOriginal,
-      datos.camposEditables(),
-      _autorizar,
-    );
-    return _conservarIdentidad(desdeDocumento(skuOriginal, confirmado));
+    final cambios = datos.camposEditables()
+      ..['updatedAt'] = FieldValue.serverTimestamp();
+    return _guardarConFotografia(datos, (url) async {
+      if (url != null) cambios['imagenUrl'] = url;
+      final confirmado = await _almacen.actualizarExistente(
+        skuOriginal,
+        cambios,
+        _autorizar,
+      );
+      return _conservarIdentidad(desdeDocumento(skuOriginal, confirmado));
+    });
+  }
+
+  Future<Producto> _guardarConFotografia(
+    ProductoEdicion datos,
+    Future<Producto> Function(String?) guardar,
+  ) async {
+    String? url;
+    try {
+      if (datos.fotografia != null) {
+        url = await _subirFotografia(datos.sku, datos.fotografia!);
+      }
+      return await guardar(url);
+    } catch (_) {
+      if (url != null) {
+        try {
+          await _fotos.eliminar(url);
+        } catch (error) {
+          debugPrint('No se pudo limpiar la fotografía sin asociar: $error');
+        }
+      }
+      rethrow;
+    }
+  }
+
+  Future<String> _subirFotografia(String id, Uint8List bytes) async {
+    await _autorizar();
+    if (bytes.isEmpty || bytes.length > 10 * 1024 * 1024) {
+      throw const FormatException(
+        'La fotografia debe tener entre 1 byte y 10 MB.',
+      );
+    }
+    return _fotos.subir(id, bytes);
   }
 
   final Map<String, Producto> _porSku = {
@@ -101,8 +149,12 @@ class ProductosRepository {
   };
 
   Future<Map<String, Map<String, dynamic>>> _leer() async {
-    final snapshot = await (_firestore ?? FirebaseFirestore.instance)
-        .collection('productos')
+    final cuenta = (_authService ?? FirebaseAdminAuthService()).cuentaActual;
+    final admin = cuenta != null && await cuenta.comprobarAdmin();
+    Query<Map<String, dynamic>> consulta =
+        (_firestore ?? FirebaseFirestore.instance).collection('productos');
+    if (!admin) consulta = consulta.where('activo', isEqualTo: true);
+    final snapshot = await consulta
         .get(const GetOptions(source: Source.server))
         .timeout(const Duration(seconds: 15));
     return {for (final doc in snapshot.docs) doc.id: doc.data()};
@@ -113,7 +165,9 @@ class ProductosRepository {
   Future<ResultadoProductos> consultarProductos() async {
     try {
       final documentos = await (_cargar ?? _leer)();
-      if (documentos.isEmpty) return _respaldo();
+      if (documentos.isEmpty) {
+        return const ResultadoProductos([], usaRespaldo: false);
+      }
       // Validar todo antes de actualizar la caché para evitar resultados parciales.
       final lista = [
         for (final entry in documentos.entries)
@@ -200,8 +254,10 @@ class ProductosRepository {
       precio: campo<num>('precio').toDouble(),
       stock: campo<int>('stock'),
       descripcion: campo<String>('descripcion'),
-      imagenAsset: imagen as String?,
-      caracteristicas: lista('caracteristicas'),
+      imagenAsset: imagen as String? ?? local?.imagenAsset,
+      imagenUrl: datos['imagenUrl'] as String?,
+      activo: datos['activo'] as bool? ?? true,
+      caracteristicas: lista('caracteristicas', const []),
       compatibilidad: lista('compatibilidad', const ['Consultar por modelo']),
       rating: datos.containsKey('rating')
           ? campo<num>('rating').toDouble()
@@ -223,6 +279,8 @@ class ProductosRepository {
     'stock': producto.stock,
     'descripcion': producto.descripcion,
     'imagenAsset': producto.imagenAsset,
+    'imagenUrl': producto.imagenUrl,
+    'activo': producto.activo,
     'caracteristicas': producto.caracteristicas,
     'compatibilidad': producto.compatibilidad,
     'rating': producto.rating,

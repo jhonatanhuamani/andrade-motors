@@ -59,7 +59,7 @@ void main() {
       final compartido = tester
           .widget<AuthRouter>(find.byType(AuthRouter))
           .catalogo;
-      expect(consultas, 1);
+      expect(consultas, 2);
       expect(identical(inicio.productos, catalogo.productos), isTrue);
       expect(identical(inicio.productos, compartido.productos), isTrue);
       expect(find.byType(InventarioScreen, skipOffstage: false), findsNothing);
@@ -102,7 +102,12 @@ void main() {
     await tester.pumpWidget(
       AndradeMotorsApp(
         adminAuthService: auth,
-        productosRepository: ProductosRepository(cargar: () async => {}),
+        productosRepository: ProductosRepository(
+          cargar: () async => {
+            for (final p in demo.productos)
+              p.sku: ProductosRepository.haciaDocumento(p),
+          },
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -141,7 +146,12 @@ void main() {
     await tester.pumpWidget(
       AndradeMotorsApp(
         adminAuthService: auth,
-        productosRepository: ProductosRepository(cargar: () async => {}),
+        productosRepository: ProductosRepository(
+          cargar: () async => {
+            for (final p in demo.productos)
+              p.sku: ProductosRepository.haciaDocumento(p),
+          },
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -165,7 +175,12 @@ void main() {
     await tester.pumpWidget(
       AndradeMotorsApp(
         adminAuthService: auth,
-        productosRepository: ProductosRepository(cargar: () async => {}),
+        productosRepository: ProductosRepository(
+          cargar: () async => {
+            for (final p in demo.productos)
+              p.sku: ProductosRepository.haciaDocumento(p),
+          },
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -239,7 +254,12 @@ void main() {
     await tester.pumpWidget(
       AndradeMotorsApp(
         adminAuthService: auth,
-        productosRepository: ProductosRepository(cargar: () async => {}),
+        productosRepository: ProductosRepository(
+          cargar: () async => {
+            for (final p in demo.productos)
+              p.sku: ProductosRepository.haciaDocumento(p),
+          },
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -259,9 +279,11 @@ void main() {
     await tester.enterText(fields.at(2), '3');
     await tester.tap(find.text('Guardar'));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('9'), -250);
-    expect(find.text('9'), findsOneWidget);
-    expect(find.text('4'), findsOneWidget);
+    final total = '${demo.productos.length + 1}';
+    final bajo = '${demo.productos.where((p) => p.stock <= 5).length + 1}';
+    await tester.scrollUntilVisible(find.text(total), -250);
+    expect(find.text(total), findsOneWidget);
+    expect(find.text(bajo), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -273,7 +295,12 @@ void main() {
     await tester.pumpWidget(
       AndradeMotorsApp(
         adminAuthService: auth,
-        productosRepository: ProductosRepository(cargar: () async => {}),
+        productosRepository: ProductosRepository(
+          cargar: () async => {
+            for (final p in demo.productos)
+              p.sku: ProductosRepository.haciaDocumento(p),
+          },
+        ),
       ),
     );
     await tester.pumpAndSettle();

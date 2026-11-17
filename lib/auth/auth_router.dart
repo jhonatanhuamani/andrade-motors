@@ -37,6 +37,9 @@ class _AuthRouterState extends State<AuthRouter> {
     if (_sesion != identidad) {
       _sesion = identidad;
       _navigator = GlobalKey<NavigatorState>();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.catalogo.cargar();
+      });
     }
     return ListenableBuilder(
       listenable: widget.catalogo,
@@ -55,7 +58,14 @@ class _AuthRouterState extends State<AuthRouter> {
                       usaRespaldo: widget.catalogo.usaRespaldo,
                       moduloInicial: widget.moduloAdminInicial,
                     )
-                  : ClienteShell(productos: widget.catalogo.productos),
+                  : ClienteShell(
+                      productos:
+                          widget.catalogo.productos.every((p) => p.activo)
+                          ? widget.catalogo.productos
+                          : widget.catalogo.productos
+                                .where((p) => p.activo)
+                                .toList(),
+                    ),
             ),
           ],
         ),

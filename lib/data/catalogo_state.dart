@@ -5,7 +5,7 @@ import 'datos_demo.dart' as demo;
 import 'productos_repository.dart';
 import 'producto_edicion.dart';
 
-/// Una sola lectura por ejecución, compartida por ambas interfaces.
+/// Catálogo compartido; se recarga al cambiar la sesión.
 class CatalogoState extends ChangeNotifier {
   CatalogoState(this.repository);
   final ProductosRepository repository;
@@ -15,7 +15,7 @@ class CatalogoState extends ChangeNotifier {
   int _revision = 0;
 
   Future<void> cargar() async {
-    final revision = _revision;
+    final revision = ++_revision;
     final resultado = await repository.consultarProductos();
     if (_disposed || revision != _revision) return;
     productos = resultado.productos;

@@ -64,6 +64,9 @@ class FirestoreProductosEscritura implements ProductosEscritura {
           'El producto ya no existe. No se creó otro documento.',
         );
       }
+      if (!actual.data()!.containsKey('createdAt')) {
+        cambios = {...cambios, 'createdAt': FieldValue.serverTimestamp()};
+      }
       transaction.update(ref, cambios);
       return {...actual.data()!, ...cambios};
     });

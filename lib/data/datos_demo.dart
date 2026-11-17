@@ -261,7 +261,8 @@ const productos = [
     stock: 10,
     sku: 'AM-ACC-010',
     icono: Icons.sports_motorsports,
-    descripcion: 'Funda decorativa de felpa para casco con orejas y detalles rosados.',
+    descripcion:
+        'Funda decorativa de felpa para casco con orejas y detalles rosados.',
     caracteristicas: [
       'Funda de felpa',
       'Diseño con orejas',
@@ -277,7 +278,8 @@ const productos = [
     stock: 10,
     sku: 'AM-ACC-011',
     icono: Icons.sports_motorsports,
-    descripcion: 'Funda decorativa de felpa para casco con orejas y detalles rojos.',
+    descripcion:
+        'Funda decorativa de felpa para casco con orejas y detalles rojos.',
     caracteristicas: [
       'Funda de felpa',
       'Diseño con orejas',
@@ -293,12 +295,9 @@ const productos = [
     stock: 10,
     sku: 'AM-ACC-012',
     icono: Icons.sports_motorsports,
-    descripcion: 'Funda de felpa tipo conejo con orejas largas y detalles en rosado.',
-    caracteristicas: [
-      'Funda de felpa',
-      'Diseño de conejo',
-      'Orejas largas',
-    ],
+    descripcion:
+        'Funda de felpa tipo conejo con orejas largas y detalles en rosado.',
+    caracteristicas: ['Funda de felpa', 'Diseño de conejo', 'Orejas largas'],
     compatibilidad: ['Universal · según talla'],
   ),
   Producto(
@@ -309,12 +308,9 @@ const productos = [
     stock: 10,
     sku: 'AM-ACC-013',
     icono: Icons.sports_motorsports,
-    descripcion: 'Funda de felpa tipo conejo en gris claro con detalles naranjas.',
-    caracteristicas: [
-      'Funda de felpa',
-      'Diseño de conejo',
-      'Orejas largas',
-    ],
+    descripcion:
+        'Funda de felpa tipo conejo en gris claro con detalles naranjas.',
+    caracteristicas: ['Funda de felpa', 'Diseño de conejo', 'Orejas largas'],
     compatibilidad: ['Universal · según talla'],
   ),
   Producto(
@@ -341,7 +337,8 @@ const productos = [
     stock: 10,
     sku: 'AM-ACC-015',
     icono: Icons.sports_motorsports,
-    descripcion: 'Malla elástica para asegurar carga pequeña en la moto, de 40x40 cm.',
+    descripcion:
+        'Malla elástica para asegurar carga pequeña en la moto, de 40x40 cm.',
     caracteristicas: [
       'Malla elástica 40x40 cm',
       'Ganchos de sujeción',
@@ -357,7 +354,8 @@ const productos = [
     stock: 10,
     sku: 'AM-ACC-016',
     icono: Icons.sports_motorsports,
-    descripcion: 'Malla elástica para asegurar carga pequeña en la moto, de 40x40 cm.',
+    descripcion:
+        'Malla elástica para asegurar carga pequeña en la moto, de 40x40 cm.',
     caracteristicas: [
       'Malla elástica 40x40 cm',
       'Ganchos de sujeción',
@@ -373,7 +371,8 @@ const productos = [
     stock: 10,
     sku: 'AM-ACC-017',
     icono: Icons.sports_motorsports,
-    descripcion: 'Malla elástica para asegurar carga pequeña en la moto, de 40x40 cm.',
+    descripcion:
+        'Malla elástica para asegurar carga pequeña en la moto, de 40x40 cm.',
     caracteristicas: [
       'Malla elástica 40x40 cm',
       'Ganchos de sujeción',
@@ -406,11 +405,7 @@ const productos = [
     sku: 'AM-ACC-019',
     icono: Icons.security,
     descripcion: 'Candado de disco con alarma sonora, para proteger la moto contra robo.',
-    caracteristicas: [
-      'Alarma sonora',
-      'Dos llaves',
-      'Negro y plateado',
-    ],
+    caracteristicas: ['Alarma sonora', 'Dos llaves', 'Negro y plateado'],
     compatibilidad: ['Consultar por modelo'],
   ),
   Producto(
@@ -421,7 +416,8 @@ const productos = [
     stock: 10,
     sku: 'AM-ACC-020',
     icono: Icons.security,
-    descripcion: 'Cadena de seguridad reforzada para asegurar la moto a un punto fijo.',
+    descripcion:
+        'Cadena de seguridad reforzada para asegurar la moto a un punto fijo.',
     caracteristicas: [
       'Grosor 20 mm',
       'Largo 1.80 m',
@@ -438,11 +434,7 @@ const productos = [
     sku: 'AM-ACC-021',
     icono: Icons.sports_motorsports,
     descripcion: 'Protector adhesivo de tanque con diseño de alas, para evitar rayaduras.',
-    caracteristicas: [
-      'Adhesivo',
-      'Protege el tanque',
-      'Varios colores',
-    ],
+    caracteristicas: ['Adhesivo', 'Protege el tanque', 'Varios colores'],
     compatibilidad: ['Consultar por modelo'],
   ),
   Producto(
@@ -454,11 +446,7 @@ const productos = [
     sku: 'AM-ACC-022',
     icono: Icons.sports_motorsports,
     descripcion: 'Tapabarro universal para la rueda delantera, con soportes de fijación incluidos.',
-    caracteristicas: [
-      'Universal',
-      'Incluye soportes',
-      'Color negro',
-    ],
+    caracteristicas: ['Universal', 'Incluye soportes', 'Color negro'],
     compatibilidad: ['Consultar por modelo'],
   ),
   Producto(
@@ -502,11 +490,7 @@ const productos = [
     sku: 'AM-ACC-025',
     icono: Icons.lightbulb_outline,
     descripcion: 'Neblinero LED de triple lupa con gran alcance para conducción nocturna.',
-    caracteristicas: [
-      'Triple lupa',
-      'Alto alcance',
-      'Montaje universal',
-    ],
+    caracteristicas: ['Triple lupa', 'Alto alcance', 'Montaje universal'],
     compatibilidad: ['Consultar por modelo'],
   ),
   Producto(
@@ -533,12 +517,9 @@ const productos = [
     stock: 10,
     sku: 'AM-ACC-027',
     icono: Icons.lightbulb_outline,
-    descripcion: 'Exploradora LED cuadrada de 12 luces para iluminación adicional.',
-    caracteristicas: [
-      '12 LED',
-      'Luz blanca',
-      'Montaje universal',
-    ],
+    descripcion:
+        'Exploradora LED cuadrada de 12 luces para iluminación adicional.',
+    caracteristicas: ['12 LED', 'Luz blanca', 'Montaje universal'],
     compatibilidad: ['Consultar por modelo'],
   ),
   Producto(
@@ -550,11 +531,7 @@ const productos = [
     sku: 'AM-ACC-028',
     icono: Icons.sports_motorsports,
     descripcion: 'Malla protectora de asiento en negro, de una pieza, con buena ventilación.',
-    caracteristicas: [
-      'Una pieza',
-      'Malla transpirable',
-      'Color negro',
-    ],
+    caracteristicas: ['Una pieza', 'Malla transpirable', 'Color negro'],
     compatibilidad: ['Consultar por modelo'],
   ),
   Producto(
@@ -566,11 +543,7 @@ const productos = [
     sku: 'AM-ACC-029',
     icono: Icons.security,
     descripcion: 'Protector de rodillas y codos con placas metálicas para mayor resistencia.',
-    caracteristicas: [
-      'Placas metálicas',
-      'Rodillas y codos',
-      'Ajustable',
-    ],
+    caracteristicas: ['Placas metálicas', 'Rodillas y codos', 'Ajustable'],
     compatibilidad: ['Universal · según talla'],
   ),
   Producto(
@@ -581,12 +554,9 @@ const productos = [
     stock: 10,
     sku: 'AM-ACC-030',
     icono: Icons.security,
-    descripcion: 'Protector de rodillas y codos con placas de impacto para uso en moto.',
-    caracteristicas: [
-      'Placas de impacto',
-      'Rodillas y codos',
-      'Ajustable',
-    ],
+    descripcion:
+        'Protector de rodillas y codos con placas de impacto para uso en moto.',
+    caracteristicas: ['Placas de impacto', 'Rodillas y codos', 'Ajustable'],
     compatibilidad: ['Universal · según talla'],
   ),
   Producto(
@@ -614,11 +584,7 @@ const productos = [
     sku: 'AM-REP-008',
     icono: Icons.settings_suggest_outlined,
     descripcion: 'Direccional ámbar con carcasa negra y lente transparente para motos de uso general.',
-    caracteristicas: [
-      'Luz ámbar',
-      'Carcasa negra',
-      'Par de direccionales',
-    ],
+    caracteristicas: ['Luz ámbar', 'Carcasa negra', 'Par de direccionales'],
     compatibilidad: ['Consultar por modelo'],
   ),
   Producto(
@@ -645,7 +611,8 @@ const productos = [
     stock: 10,
     sku: 'AM-REP-010',
     icono: Icons.settings_suggest_outlined,
-    descripcion: 'Direccional LED ámbar con lente transparente y cableado incluido.',
+    descripcion:
+        'Direccional LED ámbar con lente transparente y cableado incluido.',
     caracteristicas: [
       'LED ámbar',
       'Lente transparente',
@@ -661,12 +628,9 @@ const productos = [
     stock: 10,
     sku: 'AM-REP-011',
     icono: Icons.settings_suggest_outlined,
-    descripcion: 'Direccional ámbar con cableado incluido, para instalación directa.',
-    caracteristicas: [
-      'Cableado incluido',
-      'Luz ámbar',
-      'Par de direccionales',
-    ],
+    descripcion:
+        'Direccional ámbar con cableado incluido, para instalación directa.',
+    caracteristicas: ['Cableado incluido', 'Luz ámbar', 'Par de direccionales'],
     compatibilidad: ['Consultar por modelo'],
   ),
   Producto(
@@ -677,12 +641,9 @@ const productos = [
     stock: 10,
     sku: 'AM-REP-012',
     icono: Icons.disc_full_outlined,
-    descripcion: 'Disco de freno delantero para XR150, con ranuras de ventilación.',
-    caracteristicas: [
-      'Ranuras de ventilación',
-      'Para XR150',
-      'Acero',
-    ],
+    descripcion:
+        'Disco de freno delantero para XR150, con ranuras de ventilación.',
+    caracteristicas: ['Ranuras de ventilación', 'Para XR150', 'Acero'],
     compatibilidad: ['Honda XR150*'],
   ),
   Producto(
@@ -693,12 +654,9 @@ const productos = [
     stock: 10,
     sku: 'AM-REP-013',
     icono: Icons.disc_full_outlined,
-    descripcion: 'Disco de freno posterior para motos NS, con diseño perforado.',
-    caracteristicas: [
-      'Diseño perforado',
-      'Para modelos NS*',
-      'Acero',
-    ],
+    descripcion:
+        'Disco de freno posterior para motos NS, con diseño perforado.',
+    caracteristicas: ['Diseño perforado', 'Para modelos NS*', 'Acero'],
     compatibilidad: ['NS*'],
   ),
   Producto(
@@ -725,7 +683,8 @@ const productos = [
     stock: 10,
     sku: 'AM-ACE-004',
     icono: Icons.water_drop,
-    descripcion: 'Aceite semisintético Motul 5100 para motores de cuatro tiempos.',
+    descripcion:
+        'Aceite semisintético Motul 5100 para motores de cuatro tiempos.',
     caracteristicas: [
       'Presentación de 1 litro',
       'Viscosidad 15W-50',

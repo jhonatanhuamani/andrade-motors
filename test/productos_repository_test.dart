@@ -21,8 +21,8 @@ void main() {
     },
   );
 
-  test('Los ocho productos conservan campos, rutas e iconos al convertir', () {
-    expect(demo.productos, hasLength(demo.productos.length));
+  test('Los 48 productos conservan campos, rutas e iconos al convertir', () {
+    expect(demo.productos, hasLength(48));
     for (final original in demo.productos) {
       final campos = ProductosRepository.haciaDocumento(original);
       expect(campos.containsKey('icono'), isFalse);
@@ -56,7 +56,8 @@ void main() {
   test('Colección vacía y errores utilizan respaldo con diagnóstico', () async {
     final vacio = await ProductosRepository(cargar: () async => {})
         .consultarProductos();
-    expect(vacio.usaRespaldo, isTrue);
+    expect(vacio.usaRespaldo, isFalse);
+    expect(vacio.productos, isEmpty);
     expect(vacio.error, isNull);
     final fallo = await ProductosRepository(
       cargar: () async => throw Exception('lectura'),

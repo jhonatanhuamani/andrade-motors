@@ -4,14 +4,14 @@ class AppTheme {
   static const anchoContenido = 960.0;
   static const alerta = Color(0xFFE89870);
   static const radio = 22.0;
-  static const oro = Color(0xFFE5B95E);
+  static const oro = Color.fromARGB(255, 183, 142, 61);
   static const fondo = Color(0xFF0B0D0F);
   static const superficie = Color(0xFF15181C);
   static const elevado = Color(0xFF1B1E22);
   static const linea = Color(0xFF2C3037);
   static const texto = Color(0xFFF4F1EB);
   static const secundario = Color(0xFF969DA8);
-  static const verde = Color(0xFF86B99B);
+  static const verde = Color.fromARGB(255, 16, 144, 69);
   static const LinearGradient gradienteOro = LinearGradient(
     colors: [Color(0xFFF0D6A2), oro, Color(0xFFAD8243)],
   );

@@ -91,10 +91,11 @@ void main() {
     expect(producto.sku, 'TEST-001');
     expect(producto.precio, 25.5);
     expect(producto.imagenAsset, isNull);
-    expect(
-      firestore.documentos['TEST-001']!.keys.toSet(),
-      ProductosRepository.haciaDocumento(producto).keys.toSet(),
-    );
+    expect(firestore.documentos['TEST-001']!.keys.toSet(), {
+      ...ProductosRepository.haciaDocumento(producto).keys,
+      'createdAt',
+      'updatedAt',
+    });
     expect(producto.resenas, 0);
     expect(firestore.documentos, hasLength(demo.productos.length + 1));
     for (final entry in anteriores.entries) {
@@ -193,6 +194,8 @@ void main() {
       expect(firestore.documentos[sku]![entry.key], entry.value);
     }
     expect(firestore.camposActualizados.single, {
+      'activo',
+      'updatedAt',
       'nombre',
       'categoria',
       'precio',
@@ -291,7 +294,10 @@ void main() {
     await catalogo.cargar();
     await catalogo.crearProducto(productoPrueba());
     expect(catalogo.productos, hasLength(demo.productos.length + 1));
-    expect(catalogo.productos.map((p) => p.sku).toSet(), hasLength(demo.productos.length + 1));
+    expect(
+      catalogo.productos.map((p) => p.sku).toSet(),
+      hasLength(demo.productos.length + 1),
+    );
     final anterior = catalogo.productos.fold<double>(
       0,
       (s, p) => s + p.precio * p.stock,

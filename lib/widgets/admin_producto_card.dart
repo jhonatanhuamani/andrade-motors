@@ -6,6 +6,7 @@ import 'premium_components.dart';
 import 'producto_preview.dart';
 
 /// Presentación del catálogo original con edición y fotografía local conservada.
+
 class AdminProductoCard extends StatelessWidget {
   const AdminProductoCard({super.key, required this.producto, this.onEditar});
   final Producto producto;
@@ -44,7 +45,11 @@ class AdminProductoCard extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: StatusPill(
-                      bajo ? 'Stock bajo' : producto.categoria,
+                      !producto.activo
+                          ? 'Inactivo'
+                          : bajo
+                          ? 'Stock bajo'
+                          : producto.categoria,
                       color: bajo ? AppTheme.alerta : AppTheme.oro,
                     ),
                   ),
@@ -127,11 +132,6 @@ class AdminProductoCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   for (final accion in [
                     (Icons.edit_outlined, 'Editar producto'),
-                    (Icons.photo_library_outlined, 'Fotografías · pendiente'),
-                    (
-                      Icons.toggle_off_outlined,
-                      'Activar / desactivar · pendiente',
-                    ),
                   ])
                     Padding(
                       padding: const EdgeInsets.only(bottom: 6),

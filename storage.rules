@@ -1,0 +1,24 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function admin() {
+      return request.auth != null
+        && ('admin' in request.auth.token)
+        && request.auth.token.admin == true;
+    }
+
+    function productoActivo(productId) {
+      return firestore.get(
+        /databases/(default)/documents/productos/$(productId)
+      ).data.activo == true;
+    }
+
+    match /productos/{productId}/{filename} {
+      allow read: if admin() || productoActivo(productId);
+      allow create, update: if admin()
+        && request.resource.size <= 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if admin();
+    }
+  }
+}

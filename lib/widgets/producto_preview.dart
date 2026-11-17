@@ -16,6 +16,17 @@ class ProductoPreview extends StatelessWidget {
   final Producto producto;
   final double height;
   final bool large;
+  Widget _ilustracion() => CustomPaint(
+    painter: _ProductPainter(producto.categoria, producto.nombre),
+    child: const SizedBox.expand(),
+  );
+  Widget _local() => producto.imagenAsset?.trim().isNotEmpty == true
+      ? Image.asset(
+          producto.imagenAsset!,
+          fit: BoxFit.contain,
+          errorBuilder: (_, error, trace) => _ilustracion(),
+        )
+      : _ilustracion();
   @override
   Widget build(BuildContext context) => SizedBox(
     height: height,
@@ -30,37 +41,24 @@ class ProductoPreview extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          if (producto.imagenAsset != null)
-            Positioned.fill(
-              child: Image.asset(
-                producto.imagenAsset!,
-                fit: BoxFit.contain,
-                alignment: Alignment.center,
-                frameBuilder: (context, child, frame, wasSynchronouslyLoaded) =>
-                    frame == null && !wasSynchronouslyLoaded
-                    ? CustomPaint(
-                        painter: _ProductPainter(
-                          producto.categoria,
-                          producto.nombre,
-                        ),
-                      )
-                    : Padding(
-                        padding: large
-                            ? const EdgeInsets.all(24)
-                            : const EdgeInsets.fromLTRB(16, 42, 16, 18),
-                        child: child,
-                      ),
-                errorBuilder: (_, error, trace) => CustomPaint(
-                  painter: _ProductPainter(producto.categoria, producto.nombre),
-                ),
-              ),
+          Positioned.fill(
+            child: Padding(
+              padding: large
+                  ? const EdgeInsets.all(24)
+                  : const EdgeInsets.fromLTRB(16, 42, 16, 18),
+              child: producto.imagenUrl?.trim().isNotEmpty == true
+                  ? Image.network(
+                      producto.imagenUrl!,
+                      fit: BoxFit.contain,
+                      loadingBuilder: (context, child, progress) =>
+                          progress == null
+                          ? child
+                          : const Center(child: CircularProgressIndicator()),
+                      errorBuilder: (_, error, trace) => _local(),
+                    )
+                  : _local(),
             ),
-          if (producto.imagenAsset == null)
-            Positioned.fill(
-              child: CustomPaint(
-                painter: _ProductPainter(producto.categoria, producto.nombre),
-              ),
-            ),
+          ),
           if (large)
             Positioned(
               left: 12,

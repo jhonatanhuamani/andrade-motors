@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 /// Datos admitidos por el formulario; no contiene objetos visuales ni permisos.
 class ProductoEdicion {
   ProductoEdicion({
@@ -10,6 +12,9 @@ class ProductoEdicion {
     required List<String> caracteristicas,
     required List<String> compatibilidad,
     this.imagenAsset,
+    this.imagenUrl,
+    this.activo = true,
+    this.fotografia,
   }) : sku = normalizarSku(sku),
        caracteristicas = List.unmodifiable(caracteristicas),
        compatibilidad = List.unmodifiable(compatibilidad);
@@ -19,6 +24,9 @@ class ProductoEdicion {
   final int stock;
   final List<String> caracteristicas, compatibilidad;
   final String? imagenAsset;
+  final String? imagenUrl;
+  final bool activo;
+  final Uint8List? fotografia;
 
   static String normalizarSku(String valor) => valor.trim().toUpperCase();
   static String? validarSku(String valor) {
@@ -67,6 +75,8 @@ class ProductoEdicion {
 
   Map<String, dynamic> camposEditables() => {
     'nombre': nombre.trim(),
+    'activo': activo,
+    if (imagenUrl != null) 'imagenUrl': imagenUrl,
     'categoria': categoria.trim(),
     'precio': precio,
     'stock': stock,
