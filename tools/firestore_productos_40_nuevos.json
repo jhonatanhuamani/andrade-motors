@@ -1,0 +1,762 @@
+{
+  "AM-CAS-001": {
+    "sku": "AM-CAS-001",
+    "nombre": "Casco C3 integral con diseño negro",
+    "categoria": "Cascos",
+    "precio": 219,
+    "stock": 10,
+    "descripcion": "Casco integral de perfil deportivo con diseño gráfico en negro, pensado para recorridos diarios y viajes.",
+    "imagenAsset": "assets/images/productos/casco_c3_integral.png",
+    "caracteristicas": [
+      "Casco integral",
+      "Diseño gráfico deportivo",
+      "Certificado"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-CAS-002": {
+    "sku": "AM-CAS-002",
+    "nombre": "Casco C1 integral negro mate",
+    "categoria": "Cascos",
+    "precio": 219,
+    "stock": 10,
+    "descripcion": "Casco integral en acabado negro mate con visera transparente y estructura resistente.",
+    "imagenAsset": "assets/images/productos/casco_c1_negro_mate.png",
+    "caracteristicas": [
+      "Casco integral",
+      "Acabado negro mate",
+      "Visera transparente"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-CAS-003": {
+    "sku": "AM-CAS-003",
+    "nombre": "Casco ICH negro/gris mate",
+    "categoria": "Cascos",
+    "precio": 165,
+    "stock": 10,
+    "descripcion": "Casco ICH de estilo moderno con gráfico gris, visera transparente y cierre seguro.",
+    "imagenAsset": "assets/images/productos/casco_ich_negro_gris.png",
+    "caracteristicas": [
+      "Casco con certificación",
+      "Acabado negro/gris mate",
+      "Visera transparente"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-CAS-004": {
+    "sku": "AM-CAS-004",
+    "nombre": "Casco ICH negro/gris mate con gráfico",
+    "categoria": "Cascos",
+    "precio": 165,
+    "stock": 10,
+    "descripcion": "Casco ICH con gráfico tipo urbano en negro y gris mate.",
+    "imagenAsset": "assets/images/productos/casco_ich_grafico.png",
+    "caracteristicas": [
+      "Casco con certificación",
+      "Gráfico urbano",
+      "Visera transparente"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-CAS-005": {
+    "sku": "AM-CAS-005",
+    "nombre": "Casco ICH rojo/gris negro",
+    "categoria": "Cascos",
+    "precio": 165,
+    "stock": 10,
+    "descripcion": "Casco ICH con detalles rojos y gris oscuro, ideal para un look deportivo.",
+    "imagenAsset": "assets/images/productos/casco_ich_rojo_negro.png",
+    "caracteristicas": [
+      "Casco con certificación",
+      "Detalles rojos",
+      "Visera transparente"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-CAS-006": {
+    "sku": "AM-CAS-006",
+    "nombre": "Casco ICH rojo/gris mate",
+    "categoria": "Cascos",
+    "precio": 165,
+    "stock": 10,
+    "descripcion": "Casco ICH en negro mate con gráficos rojos, buena ventilación y visera transparente.",
+    "imagenAsset": "assets/images/productos/casco_ich_rojo_mate.png",
+    "caracteristicas": [
+      "Casco con certificación",
+      "Acabado negro mate",
+      "Gráficos rojos"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-009": {
+    "sku": "AM-ACC-009",
+    "nombre": "Funda de casco económico azul",
+    "categoria": "Accesorios",
+    "precio": 55,
+    "stock": 10,
+    "descripcion": "Funda decorativa de felpa para casco con orejas azules y ojos bordados.",
+    "imagenAsset": "assets/images/productos/funda_casco_azul.png",
+    "caracteristicas": [
+      "Funda de felpa",
+      "Diseño con orejas",
+      "Fácil de colocar"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-010": {
+    "sku": "AM-ACC-010",
+    "nombre": "Funda de casco económico rosada",
+    "categoria": "Accesorios",
+    "precio": 55,
+    "stock": 10,
+    "descripcion": "Funda decorativa de felpa para casco con orejas y detalles rosados.",
+    "imagenAsset": "assets/images/productos/funda_casco_rosa.png",
+    "caracteristicas": [
+      "Funda de felpa",
+      "Diseño con orejas",
+      "Fácil de colocar"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-011": {
+    "sku": "AM-ACC-011",
+    "nombre": "Funda de casco económico roja",
+    "categoria": "Accesorios",
+    "precio": 55,
+    "stock": 10,
+    "descripcion": "Funda decorativa de felpa para casco con orejas y detalles rojos.",
+    "imagenAsset": "assets/images/productos/funda_casco_roja.png",
+    "caracteristicas": [
+      "Funda de felpa",
+      "Diseño con orejas",
+      "Fácil de colocar"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-012": {
+    "sku": "AM-ACC-012",
+    "nombre": "Funda para casco conejo gris",
+    "categoria": "Accesorios",
+    "precio": 85,
+    "stock": 10,
+    "descripcion": "Funda de felpa tipo conejo con orejas largas y detalles en rosado.",
+    "imagenAsset": "assets/images/productos/funda_casco_conejo_rosa.png",
+    "caracteristicas": [
+      "Funda de felpa",
+      "Diseño de conejo",
+      "Orejas largas"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-013": {
+    "sku": "AM-ACC-013",
+    "nombre": "Funda para casco conejo gris claro",
+    "categoria": "Accesorios",
+    "precio": 85,
+    "stock": 10,
+    "descripcion": "Funda de felpa tipo conejo en gris claro con detalles naranjas.",
+    "imagenAsset": "assets/images/productos/funda_casco_conejo_gris.png",
+    "caracteristicas": [
+      "Funda de felpa",
+      "Diseño de conejo",
+      "Orejas largas"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-014": {
+    "sku": "AM-ACC-014",
+    "nombre": "Balaclava roja, azul y negra",
+    "categoria": "Accesorios",
+    "precio": 15,
+    "stock": 10,
+    "descripcion": "Balaclava de tela polar para protegerte del frío y el polvo al manejar.",
+    "imagenAsset": "assets/images/productos/balaclava_rojo_azul_negro.png",
+    "caracteristicas": [
+      "Tela polar",
+      "Protege cara y cuello",
+      "Disponible en rojo, azul y negro"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-015": {
+    "sku": "AM-ACC-015",
+    "nombre": "Malla para casco 40x40 azul",
+    "categoria": "Accesorios",
+    "precio": 15,
+    "stock": 10,
+    "descripcion": "Malla elástica para asegurar carga pequeña en la moto, de 40x40 cm.",
+    "imagenAsset": "assets/images/productos/malla_40x40_azul.png",
+    "caracteristicas": [
+      "Malla elástica 40x40 cm",
+      "Ganchos de sujeción",
+      "Color azul"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-016": {
+    "sku": "AM-ACC-016",
+    "nombre": "Malla para casco 40x40 negro",
+    "categoria": "Accesorios",
+    "precio": 15,
+    "stock": 10,
+    "descripcion": "Malla elástica para asegurar carga pequeña en la moto, de 40x40 cm.",
+    "imagenAsset": "assets/images/productos/malla_40x40_negro.png",
+    "caracteristicas": [
+      "Malla elástica 40x40 cm",
+      "Ganchos de sujeción",
+      "Color negro"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-017": {
+    "sku": "AM-ACC-017",
+    "nombre": "Malla para casco 40x40 rojo",
+    "categoria": "Accesorios",
+    "precio": 15,
+    "stock": 10,
+    "descripcion": "Malla elástica para asegurar carga pequeña en la moto, de 40x40 cm.",
+    "imagenAsset": "assets/images/productos/malla_40x40_roja.png",
+    "caracteristicas": [
+      "Malla elástica 40x40 cm",
+      "Ganchos de sujeción",
+      "Color rojo"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-018": {
+    "sku": "AM-ACC-018",
+    "nombre": "Malla para casco reflectiva",
+    "categoria": "Accesorios",
+    "precio": 25,
+    "stock": 10,
+    "descripcion": "Malla elástica reflectiva para asegurar carga, con visibilidad nocturna.",
+    "imagenAsset": "assets/images/productos/malla_reflectiva.png",
+    "caracteristicas": [
+      "Malla elástica",
+      "Detalles reflectivos",
+      "Disponible en negro, rojo y azul"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-019": {
+    "sku": "AM-ACC-019",
+    "nombre": "Candado de disco con alarma",
+    "categoria": "Accesorios",
+    "precio": 55,
+    "stock": 10,
+    "descripcion": "Candado de disco con alarma sonora, para proteger la moto contra robo.",
+    "imagenAsset": "assets/images/productos/candado_disco_alarma.png",
+    "caracteristicas": [
+      "Alarma sonora",
+      "Dos llaves",
+      "Negro y plateado"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-020": {
+    "sku": "AM-ACC-020",
+    "nombre": "Cadena de seguridad reforzada 20 mm x 1.80 m",
+    "categoria": "Accesorios",
+    "precio": 45,
+    "stock": 10,
+    "descripcion": "Cadena de seguridad reforzada para asegurar la moto a un punto fijo.",
+    "imagenAsset": "assets/images/productos/cadena_seguridad_20mm.png",
+    "caracteristicas": [
+      "Grosor 20 mm",
+      "Largo 1.80 m",
+      "Recubrimiento resistente"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-021": {
+    "sku": "AM-ACC-021",
+    "nombre": "Protectores de tanque",
+    "categoria": "Accesorios",
+    "precio": 20,
+    "stock": 10,
+    "descripcion": "Protector adhesivo de tanque con diseño de alas, para evitar rayaduras.",
+    "imagenAsset": "assets/images/productos/protectores_tanque.png",
+    "caracteristicas": [
+      "Adhesivo",
+      "Protege el tanque",
+      "Varios colores"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-022": {
+    "sku": "AM-ACC-022",
+    "nombre": "Tapabarro universal",
+    "categoria": "Accesorios",
+    "precio": 55,
+    "stock": 10,
+    "descripcion": "Tapabarro universal para la rueda delantera, con soportes de fijación incluidos.",
+    "imagenAsset": "assets/images/productos/tapabarro_universal.png",
+    "caracteristicas": [
+      "Universal",
+      "Incluye soportes",
+      "Color negro"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-023": {
+    "sku": "AM-ACC-023",
+    "nombre": "Neblinero búho LED",
+    "categoria": "Accesorios",
+    "precio": 75,
+    "stock": 10,
+    "descripcion": "Neblinero tipo búho con luz blanca y amarilla, para mejorar la visibilidad.",
+    "imagenAsset": "assets/images/productos/neblinero_buho.png",
+    "caracteristicas": [
+      "Luz blanca y amarilla",
+      "Diseño de búho",
+      "Montaje universal"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-024": {
+    "sku": "AM-ACC-024",
+    "nombre": "Neblinero cañón 12W",
+    "categoria": "Accesorios",
+    "precio": 65,
+    "stock": 10,
+    "descripcion": "Neblinero tipo cañón de 12W con luz amarilla y blanca.",
+    "imagenAsset": "assets/images/productos/neblinero_canon_12w.png",
+    "caracteristicas": [
+      "Potencia 12W",
+      "Luz amarilla y blanca",
+      "Montaje universal"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-025": {
+    "sku": "AM-ACC-025",
+    "nombre": "Neblinero LED ultra potente triple lupa",
+    "categoria": "Accesorios",
+    "precio": 129,
+    "stock": 10,
+    "descripcion": "Neblinero LED de triple lupa con gran alcance para conducción nocturna.",
+    "imagenAsset": "assets/images/productos/neblinero_triple_lupa.png",
+    "caracteristicas": [
+      "Triple lupa",
+      "Alto alcance",
+      "Montaje universal"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-026": {
+    "sku": "AM-ACC-026",
+    "nombre": "Luz LED blanca de trabajo",
+    "categoria": "Accesorios",
+    "precio": 35,
+    "stock": 10,
+    "descripcion": "Barra de luz LED blanca de alta intensidad para iluminación adicional.",
+    "imagenAsset": "assets/images/productos/luz_led_blanca.png",
+    "caracteristicas": [
+      "Luz LED blanca",
+      "Disipador de calor",
+      "Montaje universal"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-027": {
+    "sku": "AM-ACC-027",
+    "nombre": "Exploradora LED cuadrada",
+    "categoria": "Accesorios",
+    "precio": 35,
+    "stock": 10,
+    "descripcion": "Exploradora LED cuadrada de 12 luces para iluminación adicional.",
+    "imagenAsset": "assets/images/productos/exploradora_led_cuadrada.png",
+    "caracteristicas": [
+      "12 LED",
+      "Luz blanca",
+      "Montaje universal"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-028": {
+    "sku": "AM-ACC-028",
+    "nombre": "Mallas protector de asiento 1 pieza",
+    "categoria": "Accesorios",
+    "precio": 20,
+    "stock": 10,
+    "descripcion": "Malla protectora de asiento en negro, de una pieza, con buena ventilación.",
+    "imagenAsset": "assets/images/productos/malla_asiento_1_pieza.png",
+    "caracteristicas": [
+      "Una pieza",
+      "Malla transpirable",
+      "Color negro"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-029": {
+    "sku": "AM-ACC-029",
+    "nombre": "Protector de rodillas y codo metal",
+    "categoria": "Accesorios",
+    "precio": 89,
+    "stock": 10,
+    "descripcion": "Protector de rodillas y codos con placas metálicas para mayor resistencia.",
+    "imagenAsset": "assets/images/productos/protector_rodillas_metal.png",
+    "caracteristicas": [
+      "Placas metálicas",
+      "Rodillas y codos",
+      "Ajustable"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-030": {
+    "sku": "AM-ACC-030",
+    "nombre": "Protector de rodillas y codo",
+    "categoria": "Accesorios",
+    "precio": 85,
+    "stock": 10,
+    "descripcion": "Protector de rodillas y codos con placas de impacto para uso en moto.",
+    "imagenAsset": "assets/images/productos/protector_rodillas_codo.png",
+    "caracteristicas": [
+      "Placas de impacto",
+      "Rodillas y codos",
+      "Ajustable"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACC-031": {
+    "sku": "AM-ACC-031",
+    "nombre": "Protector de rodillas y codo premium",
+    "categoria": "Accesorios",
+    "precio": 85,
+    "stock": 10,
+    "descripcion": "Protector de rodillas y codos con diseño reforzado y ajuste con correas.",
+    "imagenAsset": "assets/images/productos/protector_rodillas_codo_v2.png",
+    "caracteristicas": [
+      "Diseño reforzado",
+      "Rodillas y codos",
+      "Ajuste con correas"
+    ],
+    "compatibilidad": [
+      "Universal · según talla"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-REP-008": {
+    "sku": "AM-REP-008",
+    "nombre": "Luz direccional ámbar",
+    "categoria": "Repuestos",
+    "precio": 23,
+    "stock": 10,
+    "descripcion": "Direccional ámbar con carcasa negra y lente transparente para motos de uso general.",
+    "imagenAsset": "assets/images/productos/direccional_ambar_negra.png",
+    "caracteristicas": [
+      "Luz ámbar",
+      "Carcasa negra",
+      "Par de direccionales"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-REP-009": {
+    "sku": "AM-REP-009",
+    "nombre": "Luz direccional bicolor ámbar/blanco",
+    "categoria": "Repuestos",
+    "precio": 20,
+    "stock": 10,
+    "descripcion": "Direccional bicolor ámbar y blanco, con diseño compacto.",
+    "imagenAsset": "assets/images/productos/direccional_bicolor.png",
+    "caracteristicas": [
+      "Bicolor ámbar/blanco",
+      "Diseño compacto",
+      "Par de direccionales"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-REP-010": {
+    "sku": "AM-REP-010",
+    "nombre": "Luz direccional ámbar LED",
+    "categoria": "Repuestos",
+    "precio": 20,
+    "stock": 10,
+    "descripcion": "Direccional LED ámbar con lente transparente y cableado incluido.",
+    "imagenAsset": "assets/images/productos/direccional_led_ambar.png",
+    "caracteristicas": [
+      "LED ámbar",
+      "Lente transparente",
+      "Par de direccionales"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-REP-011": {
+    "sku": "AM-REP-011",
+    "nombre": "Luz direccional ámbar con cable",
+    "categoria": "Repuestos",
+    "precio": 35,
+    "stock": 10,
+    "descripcion": "Direccional ámbar con cableado incluido, para instalación directa.",
+    "imagenAsset": "assets/images/productos/direccional_ambar_cable.png",
+    "caracteristicas": [
+      "Cableado incluido",
+      "Luz ámbar",
+      "Par de direccionales"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-REP-012": {
+    "sku": "AM-REP-012",
+    "nombre": "Disco de freno delantero XR150",
+    "categoria": "Repuestos",
+    "precio": 79,
+    "stock": 10,
+    "descripcion": "Disco de freno delantero para XR150, con ranuras de ventilación.",
+    "imagenAsset": "assets/images/productos/disco_freno_xr150.png",
+    "caracteristicas": [
+      "Ranuras de ventilación",
+      "Para XR150",
+      "Acero"
+    ],
+    "compatibilidad": [
+      "Honda XR150*"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-REP-013": {
+    "sku": "AM-REP-013",
+    "nombre": "Disco de freno posterior NS",
+    "categoria": "Repuestos",
+    "precio": 90,
+    "stock": 10,
+    "descripcion": "Disco de freno posterior para motos NS, con diseño perforado.",
+    "imagenAsset": "assets/images/productos/disco_freno_ns.png",
+    "caracteristicas": [
+      "Diseño perforado",
+      "Para modelos NS*",
+      "Acero"
+    ],
+    "compatibilidad": [
+      "NS*"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACE-003": {
+    "sku": "AM-ACE-003",
+    "nombre": "Aceite Motul 7100 20W-50 1L",
+    "categoria": "Aceites",
+    "precio": 48,
+    "stock": 10,
+    "descripcion": "Aceite sintético Motul 7100 para motores de cuatro tiempos.",
+    "imagenAsset": "assets/images/productos/aceite_motul_7100.png",
+    "caracteristicas": [
+      "Presentación de 1 litro",
+      "Viscosidad 20W-50",
+      "Motores 4T"
+    ],
+    "compatibilidad": [
+      "Motores 4T*"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACE-004": {
+    "sku": "AM-ACE-004",
+    "nombre": "Aceite Motul 5100 15W-50 1L",
+    "categoria": "Aceites",
+    "precio": 38,
+    "stock": 10,
+    "descripcion": "Aceite semisintético Motul 5100 para motores de cuatro tiempos.",
+    "imagenAsset": "assets/images/productos/aceite_motul_5100.png",
+    "caracteristicas": [
+      "Presentación de 1 litro",
+      "Viscosidad 15W-50",
+      "Motores 4T"
+    ],
+    "compatibilidad": [
+      "Motores 4T*"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACE-005": {
+    "sku": "AM-ACE-005",
+    "nombre": "Aceite Motul 3000 20W-50 1L",
+    "categoria": "Aceites",
+    "precio": 28,
+    "stock": 10,
+    "descripcion": "Aceite mineral Motul 3000 para motores de cuatro tiempos.",
+    "imagenAsset": "assets/images/productos/aceite_motul_3000.png",
+    "caracteristicas": [
+      "Presentación de 1 litro",
+      "Viscosidad 20W-50",
+      "Motores 4T"
+    ],
+    "compatibilidad": [
+      "Motores 4T*"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACE-006": {
+    "sku": "AM-ACE-006",
+    "nombre": "Lubricante de cadenas BSI 440 ML",
+    "categoria": "Aceites",
+    "precio": 25,
+    "stock": 10,
+    "descripcion": "Lubricante en spray para cadenas, que reduce la fricción y el desgaste.",
+    "imagenAsset": "assets/images/productos/lubricante_cadena_bsi.png",
+    "caracteristicas": [
+      "Presentación de 440 ml",
+      "Spray para cadena",
+      "Protege contra el desgaste"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  },
+  "AM-ACE-007": {
+    "sku": "AM-ACE-007",
+    "nombre": "Silicona BSI 220 ML",
+    "categoria": "Aceites",
+    "precio": 10,
+    "stock": 10,
+    "descripcion": "Silicona para tablero y plásticos, con protección UV.",
+    "imagenAsset": "assets/images/productos/silicona_bsi.png",
+    "caracteristicas": [
+      "Presentación de 220 ml",
+      "Protección UV",
+      "Acabado brillante"
+    ],
+    "compatibilidad": [
+      "Consultar por modelo"
+    ],
+    "rating": 0.0,
+    "resenas": 0
+  }
+}

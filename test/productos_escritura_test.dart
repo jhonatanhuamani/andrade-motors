@@ -74,7 +74,7 @@ void main() {
       );
       expect(cuenta.comprobaciones, 2);
       expect(firestore.confirmaciones, 0);
-      expect(firestore.documentos, hasLength(8));
+      expect(firestore.documentos, hasLength(demo.productos.length));
       await revocada.dispose();
     },
   );
@@ -96,7 +96,7 @@ void main() {
       ProductosRepository.haciaDocumento(producto).keys.toSet(),
     );
     expect(producto.resenas, 0);
-    expect(firestore.documentos, hasLength(9));
+    expect(firestore.documentos, hasLength(demo.productos.length + 1));
     for (final entry in anteriores.entries) {
       expect(firestore.documentos[entry.key], entry.value);
     }
@@ -134,7 +134,7 @@ void main() {
     final resultados = await Future.wait([crear('Primero'), crear('Segundo')]);
     expect(resultados.where((v) => v), hasLength(1));
     expect(firestore.sets, 1);
-    expect(firestore.documentos, hasLength(9));
+    expect(firestore.documentos, hasLength(demo.productos.length + 1));
   });
 
   test('Valida precios, stock y SKU antes de enviar escrituras', () async {
@@ -225,7 +225,7 @@ void main() {
         ),
         throwsFormatException,
       );
-      expect(firestore.documentos, hasLength(8));
+      expect(firestore.documentos, hasLength(demo.productos.length));
       expect(firestore.updates, 0);
     },
   );
@@ -282,7 +282,7 @@ void main() {
       expect(identical(catalogo.productos, anterior), isTrue);
     }
     expect(firestore.confirmaciones, 0);
-    expect(firestore.documentos, hasLength(8));
+    expect(firestore.documentos, hasLength(demo.productos.length));
     catalogo.dispose();
   });
 
@@ -290,8 +290,8 @@ void main() {
     final catalogo = CatalogoState(repository);
     await catalogo.cargar();
     await catalogo.crearProducto(productoPrueba());
-    expect(catalogo.productos, hasLength(9));
-    expect(catalogo.productos.map((p) => p.sku).toSet(), hasLength(9));
+    expect(catalogo.productos, hasLength(demo.productos.length + 1));
+    expect(catalogo.productos.map((p) => p.sku).toSet(), hasLength(demo.productos.length + 1));
     final anterior = catalogo.productos.fold<double>(
       0,
       (s, p) => s + p.precio * p.stock,
@@ -300,13 +300,13 @@ void main() {
       'TEST-001',
       productoPrueba(precio: 100, stock: 8),
     );
-    expect(catalogo.productos, hasLength(9));
+    expect(catalogo.productos, hasLength(demo.productos.length + 1));
     expect(
       catalogo.productos.fold<double>(0, (s, p) => s + p.precio * p.stock),
       anterior - 25.5 * 4 + 800,
     );
     expect(
-      catalogo.productos.take(8).map((p) => p.sku),
+      catalogo.productos.take(demo.productos.length).map((p) => p.sku),
       demo.productos.map((p) => p.sku),
     );
     catalogo.dispose();

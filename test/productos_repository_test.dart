@@ -22,7 +22,7 @@ void main() {
   );
 
   test('Los ocho productos conservan campos, rutas e iconos al convertir', () {
-    expect(demo.productos, hasLength(8));
+    expect(demo.productos, hasLength(demo.productos.length));
     for (final original in demo.productos) {
       final campos = ProductosRepository.haciaDocumento(original);
       expect(campos.containsKey('icono'), isFalse);

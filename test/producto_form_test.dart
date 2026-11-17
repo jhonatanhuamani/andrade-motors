@@ -158,7 +158,7 @@ void main() {
         matching: find.byType(BackButton),
       );
       await pulsar(tester, volver);
-      expect(firestore.documentos, hasLength(8));
+      expect(firestore.documentos, hasLength(demo.productos.length));
       expect(find.byType(ProductoFormScreen), findsNothing);
       expect(find.byType(AdminProducts), findsOneWidget);
       expect(firestore.confirmaciones, 0);
@@ -185,7 +185,7 @@ void main() {
       expect(firestore.confirmaciones, 1);
       expect(
         tester.widget<AdminProducts>(find.byType(AdminProducts)).productos,
-        hasLength(9),
+        hasLength(demo.productos.length + 1),
       );
       expect(tester.takeException(), isNull);
     },
@@ -267,7 +267,7 @@ void main() {
       expect(find.byType(ProductoFormScreen), findsOneWidget);
       expect(find.textContaining('unavailable:'), findsOneWidget);
       expect(find.textContaining('guardado en Firestore'), findsNothing);
-      expect(firestore.documentos, hasLength(8));
+      expect(firestore.documentos, hasLength(demo.productos.length));
       expect(firestore.confirmaciones, 0);
     },
   );
@@ -284,7 +284,7 @@ void main() {
     );
     expect(find.textContaining('Ya existe un producto'), findsOneWidget);
     expect(find.byType(ProductoFormScreen), findsOneWidget);
-    expect(firestore.documentos, hasLength(8));
+    expect(firestore.documentos, hasLength(demo.productos.length));
     expect(firestore.confirmaciones, 0);
   });
 
