@@ -5,6 +5,7 @@ import '../../models/producto.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/premium_components.dart';
 import '../account_screen.dart';
+import '../delivery_pedidos_screen.dart';
 import '../inventario_screen.dart';
 import 'admin_modules.dart';
 
@@ -72,10 +73,7 @@ class _AdminShellState extends State<AdminShell> {
       titulo: 'Reservas',
       descripcion: 'Consulta y administración remota de reservas pendientes (3D). El formulario de reserva del cliente continúa siendo local.',
     ),
-    6 => const PendingModule(
-      titulo: 'Pedidos',
-      descripcion: 'Consulta y administración remota de pedidos pendientes (3D). El carrito sigue siendo local y no genera pedidos ni cobros.',
-    ),
+    6 => const DeliveryPedidosScreen(administrar: true),
     _ => const AccountScreen(),
   };
 

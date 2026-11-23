@@ -32,8 +32,10 @@ class ProductosRepository {
     this._authService,
     this._escritura,
     this.fotografias,
+    this.cambios,
   });
 
+  final Stream<Map<String, Map<String, dynamic>>> Function(bool admin)? cambios;
   final FirebaseFirestore? _firestore;
   final CargarProductos? _cargar;
   final AdminAuthService? _authService;
@@ -148,49 +150,70 @@ class ProductosRepository {
     for (final producto in demo.productos) producto.sku: producto,
   };
 
+  Query<Map<String, dynamic>> _consulta(bool admin) {
+    final coleccion = (_firestore ?? FirebaseFirestore.instance).collection(
+      'productos',
+    );
+    return admin ? coleccion : coleccion.where('activo', isEqualTo: true);
+  }
+
+  Map<String, Map<String, dynamic>> _documentos(
+    QuerySnapshot<Map<String, dynamic>> snapshot,
+  ) => {for (final doc in snapshot.docs) doc.id: doc.data()};
+
   Future<Map<String, Map<String, dynamic>>> _leer() async {
     final cuenta = (_authService ?? FirebaseAdminAuthService()).cuentaActual;
     final admin = cuenta != null && await cuenta.comprobarAdmin();
-    Query<Map<String, dynamic>> consulta =
-        (_firestore ?? FirebaseFirestore.instance).collection('productos');
-    if (!admin) consulta = consulta.where('activo', isEqualTo: true);
-    final snapshot = await consulta
+    final snapshot = await _consulta(admin)
         .get(const GetOptions(source: Source.server))
         .timeout(const Duration(seconds: 15));
-    return {for (final doc in snapshot.docs) doc.id: doc.data()};
+    return _documentos(snapshot);
   }
 
-  /// Si la consulta falla o contiene datos inválidos, devuelve el catálogo local
-  /// completo. Un catálogo vacío utiliza respaldo sin reportar un error.
+  Stream<ResultadoProductos> observarProductos({required bool admin}) async* {
+    final documentos =
+        cambios?.call(admin) ??
+        _consulta(admin)
+            .snapshots(includeMetadataChanges: true)
+            .where(
+              (s) => !s.metadata.isFromCache && !s.metadata.hasPendingWrites,
+            )
+            .map(_documentos);
+    await for (final filas in documentos) {
+      try {
+        yield _convertir(filas);
+      } on Exception catch (error) {
+        yield _respaldo(error);
+      }
+    }
+  }
+
   Future<ResultadoProductos> consultarProductos() async {
     try {
-      final documentos = await (_cargar ?? _leer)();
-      if (documentos.isEmpty) {
-        return const ResultadoProductos([], usaRespaldo: false);
-      }
-      // Validar todo antes de actualizar la caché para evitar resultados parciales.
-      final lista = [
-        for (final entry in documentos.entries)
-          desdeDocumento(entry.key, entry.value),
-      ];
-      final orden = {
-        for (var i = 0; i < demo.productos.length; i++)
-          demo.productos[i].sku: i,
-      };
-      lista.sort((a, b) {
-        final comparacion = (orden[a.sku] ?? orden.length).compareTo(
-          orden[b.sku] ?? orden.length,
-        );
-        return comparacion != 0 ? comparacion : a.sku.compareTo(b.sku);
-      });
-      final resultado = [for (final p in lista) _conservarIdentidad(p)];
-      return ResultadoProductos(
-        List.unmodifiable(resultado),
-        usaRespaldo: false,
-      );
+      return _convertir(await (_cargar ?? _leer)());
     } on Exception catch (error) {
       return _respaldo(error);
     }
+  }
+
+  ResultadoProductos _convertir(Map<String, Map<String, dynamic>> documentos) {
+    final lista = [
+      for (final entry in documentos.entries)
+        desdeDocumento(entry.key, entry.value),
+    ];
+    final orden = {
+      for (var i = 0; i < demo.productos.length; i++) demo.productos[i].sku: i,
+    };
+    lista.sort((a, b) {
+      final comparacion = (orden[a.sku] ?? orden.length).compareTo(
+        orden[b.sku] ?? orden.length,
+      );
+      return comparacion != 0 ? comparacion : a.sku.compareTo(b.sku);
+    });
+    return ResultadoProductos(
+      List.unmodifiable(lista.map(_conservarIdentidad)),
+      usaRespaldo: false,
+    );
   }
 
   ResultadoProductos _respaldo([Object? error]) => ResultadoProductos(

@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
 
+import '../../auth/session_scope.dart';
+import '../../data/catalogo_state.dart';
+import '../../models/delivery_pedido.dart';
 import '../../models/producto.dart';
 import '../../models/servicio.dart';
 import '../home_screen.dart';
 import '../catalogo_screen.dart';
+import '../delivery_pedidos_screen.dart';
+import '../delivery_seguimiento_screen.dart';
+import '../delivery_ubicacion_screen.dart';
 import '../producto_detalle_screen.dart';
 import '../servicios_screen.dart';
 import '../reserva_screen.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/premium_components.dart';
 import '../account_screen.dart';
+import 'tienda_web.dart';
 
 class ClienteShell extends StatefulWidget {
-  const ClienteShell({super.key, required this.productos});
+  const ClienteShell({
+    super.key,
+    required this.productos,
+    this.web = false,
+    this.cuenta,
+  });
+  final bool web;
+  final Widget? cuenta;
   final List<Producto> productos;
   @override
   State<ClienteShell> createState() => _ClienteShellState();
@@ -25,33 +39,28 @@ class _ClienteShellState extends State<ClienteShell> {
   void didUpdateWidget(covariant ClienteShell oldWidget) {
     super.didUpdateWidget(oldWidget);
     final porSku = {for (final p in productos) p.sku: p};
-    final actualizado = <Producto, int>{};
-    for (final entry in carrito.entries) {
-      final producto = porSku[entry.key.sku] ?? entry.key;
-      actualizado.update(
-        producto,
-        (v) => v + entry.value,
-        ifAbsent: () => entry.value,
-      );
-    }
-    carrito
-      ..clear()
-      ..addAll(actualizado);
+    carrito.updateAll(
+      (sku, linea) =>
+          (producto: porSku[sku] ?? linea.producto, cantidad: linea.cantidad),
+    );
   }
 
   void sumarAlCarrito(Producto producto, int cantidad) {
-    final actual = productos.where((p) => p.sku == producto.sku).firstOrNull;
-    final clave = carrito.keys.where((p) => p.sku == producto.sku).firstOrNull;
-    final acumulado = clave == null ? 0 : carrito.remove(clave)!;
-    carrito[actual ?? producto] = acumulado + cantidad;
+    final sku = producto.sku;
+    final actual = productos.where((p) => p.sku == sku).firstOrNull;
+    carrito[sku] = (
+      producto: actual ?? producto,
+      cantidad: (carrito[sku]?.cantidad ?? 0) + cantidad,
+    );
   }
 
   int indice = 0;
+  void irA(int pagina) => setState(() => indice = pagina);
   String categoria = 'Todos', busqueda = '';
   int revisionCatalogo = 0, revisionReserva = 0;
   String? servicioSeleccionado;
   final favoritos = <String>{};
-  final carrito = <Producto, int>{};
+  final carrito = <String, ({Producto producto, int cantidad})>{};
   static const labels = [
     'Inicio',
     'Catálogo',
@@ -90,19 +99,72 @@ class _ClienteShellState extends State<ClienteShell> {
   void detalle(Producto p) => Navigator.push<void>(
     context,
     MaterialPageRoute(
-      builder: (_) => ProductoDetalleScreen(
-        producto: p,
-        favorito: favoritos.contains(p.sku),
-        onFavorito: () => favorito(p),
-        onCarrito: verCarrito,
-        onAgregar: (cantidad) => setState(() => sumarAlCarrito(p, cantidad)),
-      ),
+      builder: (context) {
+        final fuente = CatalogoScope.of(context);
+        final actual = fuente.enVivo
+            ? fuente.productos
+                  .where((actual) => actual.sku == p.sku && actual.activo)
+                  .firstOrNull
+            : p;
+        if (actual == null) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Producto')),
+            body: const Center(
+              child: Text('Este producto ya no está disponible.'),
+            ),
+          );
+        }
+        return ProductoDetalleScreen(
+          producto: actual,
+          web: widget.web,
+          favorito: favoritos.contains(p.sku),
+          onFavorito: () => favorito(actual),
+          onCarrito: verCarrito,
+          onAgregar: (cantidad) =>
+              setState(() => sumarAlCarrito(actual, cantidad)),
+        );
+      },
     ),
   );
   void agregarRapido(Producto p) {
     setState(() => sumarAlCarrito(p, 1));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('${p.nombre} agregado al carrito local')),
+    );
+  }
+
+  Future<void> _solicitarDelivery(BuildContext hoja) async {
+    final items = [
+      for (final linea in carrito.values)
+        DeliveryItem(
+          sku: linea.producto.sku,
+          nombre: linea.producto.nombre,
+          cantidad: linea.cantidad,
+          precioUnitario: linea.producto.precio,
+        ),
+    ];
+    if (items.isEmpty) return;
+    Navigator.of(hoja).pop();
+    final pedido = await Navigator.of(context).push<DeliveryPedido>(
+      MaterialPageRoute(builder: (_) => DeliveryUbicacionScreen(items: items)),
+    );
+    if (!mounted || pedido == null) return;
+    setState(() {
+      for (final item in pedido.items) {
+        final linea = carrito[item.sku];
+        if (linea == null) continue;
+        final restante = linea.cantidad - item.cantidad;
+        if (restante <= 0) {
+          carrito.remove(item.sku);
+        } else {
+          carrito[item.sku] = (producto: linea.producto, cantidad: restante);
+        }
+      }
+    });
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => DeliverySeguimientoScreen(pedidoId: pedido.id),
+      ),
     );
   }
 
@@ -114,7 +176,7 @@ class _ClienteShellState extends State<ClienteShell> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(22, 0, 22, 24),
           child: SizedBox(
-            height: MediaQuery.sizeOf(ctx).height * .65,
+            height: MediaQuery.sizeOf(ctx).height * (carrito.isEmpty ? .65 : .78),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -159,7 +221,7 @@ class _ClienteShellState extends State<ClienteShell> {
                                     padding: const EdgeInsets.all(12),
                                     child: Row(
                                       children: [
-                                        IconTile(e.key.icono),
+                                        IconTile(e.value.producto.icono),
                                         const SizedBox(width: 12),
                                         Expanded(
                                           child: Column(
@@ -167,7 +229,7 @@ class _ClienteShellState extends State<ClienteShell> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                e.key.nombre,
+                                                e.value.producto.nombre,
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 12,
@@ -175,7 +237,7 @@ class _ClienteShellState extends State<ClienteShell> {
                                               ),
                                               const SizedBox(height: 5),
                                               Text(
-                                                '${e.value} uds. · S/ ${(e.key.precio * e.value).toStringAsFixed(2)}',
+                                                '${e.value.cantidad} uds. · S/ ${(e.value.producto.precio * e.value.cantidad).toStringAsFixed(2)}',
                                                 style: const TextStyle(
                                                   color: AppTheme.oro,
                                                   fontSize: 12,
@@ -212,7 +274,7 @@ class _ClienteShellState extends State<ClienteShell> {
                     children: [
                       const Expanded(child: Text('Total de tu selección')),
                       Text(
-                        'S/ ${carrito.entries.fold<double>(0, (s, e) => s + e.key.precio * e.value).toStringAsFixed(2)}',
+                        'S/ ${carrito.entries.fold<double>(0, (s, e) => s + e.value.producto.precio * e.value.cantidad).toStringAsFixed(2)}',
                         style: const TextStyle(
                           color: AppTheme.oro,
                           fontSize: 26,
@@ -221,7 +283,13 @@ class _ClienteShellState extends State<ClienteShell> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
+                  FilledButton.icon(
+                    onPressed: () => _solicitarDelivery(ctx),
+                    icon: const Icon(Icons.local_shipping_outlined),
+                    label: const Text('Solicitar delivery'),
+                  ),
+                  const SizedBox(height: 12),
                 ],
                 const Text(
                   'Carrito local del prototipo. No se realizan cobros.',
@@ -237,30 +305,61 @@ class _ClienteShellState extends State<ClienteShell> {
   );
   @override
   Widget build(BuildContext context) {
-    final desktop = MediaQuery.sizeOf(context).width >= 1050;
+    final ancho = MediaQuery.sizeOf(context).width;
+    final desktop = !widget.web && ancho >= 1050;
+    final webAncha = widget.web && ancho > 1000;
+    final footer = widget.web
+        ? TiendaFooter(onPagina: irA)
+        : const SizedBox.shrink();
+    final perfil = widget.web && !SessionScope.of(context).autenticado
+        ? 'Iniciar sesión'
+        : 'Perfil';
+    const paginasWeb = [0, 1, 2, 5, 4];
+    const enlacesWeb = [
+      (0, 'Inicio'),
+      (1, 'Productos'),
+      (2, 'Servicios'),
+      (5, 'Contacto'),
+    ];
     final content = SafeArea(
       top: false,
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: AppTheme.anchoContenido),
+          constraints: BoxConstraints(
+            maxWidth: widget.web ? anchoTienda : AppTheme.anchoContenido,
+          ),
           child: IndexedStack(
             index: indice,
             children: [
               HeroMode(
                 enabled: indice == 0,
-                child: HomeScreen(
-                  productos: productos,
-                  onCatalogo: catalogo,
-                  onServicios: () => setState(() => indice = 2),
-                  onProducto: detalle,
-                  onAgregar: agregarRapido,
-                  favoritos: favoritos,
-                  onFavorito: favorito,
-                ),
+                child: widget.web
+                    ? InicioTiendaWeb(
+                        productos: productos,
+                        onCategoria: (c) => catalogo(c, ''),
+                        onServicios: () => irA(2),
+                        onReservar: reservar,
+                        onProducto: detalle,
+                        onAgregar: agregarRapido,
+                        favoritos: favoritos,
+                        onFavorito: favorito,
+                        footer: footer,
+                      )
+                    : HomeScreen(
+                        productos: productos,
+                        onCatalogo: catalogo,
+                        onServicios: () => setState(() => indice = 2),
+                        onProducto: detalle,
+                        onAgregar: agregarRapido,
+                        favoritos: favoritos,
+                        onFavorito: favorito,
+                      ),
               ),
               HeroMode(
                 enabled: indice == 1,
                 child: CatalogoScreen(
+                  web: widget.web,
+                  footer: footer,
                   productos: productos,
                   key: ValueKey(revisionCatalogo),
                   categoria: categoria,
@@ -271,12 +370,28 @@ class _ClienteShellState extends State<ClienteShell> {
                   onAgregar: agregarRapido,
                 ),
               ),
-              ServiciosScreen(onReservar: reservar),
+              ServiciosScreen(
+                onReservar: reservar,
+                web: widget.web,
+                footer: footer,
+              ),
               ReservaScreen(
                 servicioInicial: servicioSeleccionado,
                 revision: revisionReserva,
               ),
-              const AccountScreen(),
+              if (widget.cuenta case final acceso?)
+                Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 12, 20, 0),
+                      child: MisPedidosTile(),
+                    ),
+                    Expanded(child: acceso),
+                  ],
+                )
+              else
+                const AccountScreen(),
+              if (widget.web) ContactoTienda(footer: footer),
             ],
           ),
         ),
@@ -284,70 +399,88 @@ class _ClienteShellState extends State<ClienteShell> {
     );
     return Scaffold(
       appBar: AppBar(
-        title: const AndradeBrand(),
-        actions: [
-          IconButton(
-            tooltip: 'Notificaciones',
-            onPressed: () => showModalBottomSheet<void>(
-              context: context,
-              builder: (_) => const SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.all(28),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+        toolbarHeight: webAncha ? 70 : null,
+        centerTitle: widget.web ? false : null,
+        title: webAncha
+            ? Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: anchoTienda),
+                  child: Row(
                     children: [
-                      Icon(
-                        Icons.notifications_none_rounded,
-                        color: AppTheme.oro,
-                        size: 32,
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'Estás al día',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
+                      const Expanded(child: AndradeBrand()),
+                      for (final (pagina, label) in enlacesWeb)
+                        TextButton(
+                          onPressed: () => irA(pagina),
+                          style: TextButton.styleFrom(
+                            foregroundColor: indice == pagina
+                                ? AppTheme.oro
+                                : AppTheme.texto,
+                          ),
+                          child: Text(label),
                         ),
+                      const SizedBox(width: 16),
+                      IconButton(
+                        tooltip: perfil,
+                        onPressed: () => irA(4),
+                        color: indice == 4 ? AppTheme.oro : AppTheme.texto,
+                        icon: const Icon(Icons.person_outline),
                       ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Aquí encontrarás las novedades de ANDRADE MOTORS.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: AppTheme.secundario),
-                      ),
+                      _botonCarrito(),
                     ],
                   ),
                 ),
-              ),
-            ),
-            icon: const Icon(Icons.notifications_none_rounded, size: 21),
-          ),
-          if (desktop)
-            Padding(
-              padding: const EdgeInsets.only(right: 24),
-              child: Eyebrow(labels[indice], color: AppTheme.secundario),
-            ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: IconButton.outlined(
-              tooltip: 'Ver carrito',
-              style: IconButton.styleFrom(
-                side: const BorderSide(color: AppTheme.linea),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: verCarrito,
-              icon: Badge(
-                backgroundColor: AppTheme.oro,
-                textColor: AppTheme.fondo,
-                isLabelVisible: carrito.isNotEmpty,
-                label: Text('${carrito.values.fold<int>(0, (a, b) => a + b)}'),
-                child: const Icon(Icons.shopping_bag_outlined, size: 21),
-              ),
-            ),
-          ),
-        ],
+              )
+            : const AndradeBrand(),
+        actions: webAncha
+            ? null
+            : [
+                if (!widget.web)
+                  IconButton(
+                    tooltip: 'Notificaciones',
+                    onPressed: () => showModalBottomSheet<void>(
+                      context: context,
+                      builder: (_) => const SafeArea(
+                        child: Padding(
+                          padding: EdgeInsets.all(28),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.notifications_none_rounded,
+                                color: AppTheme.oro,
+                                size: 32,
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                'Estás al día',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                'Aquí encontrarás las novedades de ANDRADE MOTORS.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: AppTheme.secundario),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    icon: const Icon(
+                      Icons.notifications_none_rounded,
+                      size: 21,
+                    ),
+                  ),
+                if (desktop)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 24),
+                    child: Eyebrow(labels[indice], color: AppTheme.secundario),
+                  ),
+                _botonCarrito(),
+              ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(
@@ -388,8 +521,35 @@ class _ClienteShellState extends State<ClienteShell> {
               ],
             )
           : content,
-      bottomNavigationBar: desktop
+      bottomNavigationBar: desktop || webAncha
           ? null
+          : widget.web
+          ? NavigationBar(
+              selectedIndex: paginasWeb.indexOf(indice == 3 ? 2 : indice),
+              onDestinationSelected: (i) => irA(paginasWeb[i]),
+              destinations: const [
+                NavigationDestination(
+                  icon: Icon(Icons.home_outlined),
+                  label: 'Inicio',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.grid_view_outlined),
+                  label: 'Productos',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.build_outlined),
+                  label: 'Servicios',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.contact_support_outlined),
+                  label: 'Contacto',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.person_outline),
+                  label: 'Perfil',
+                ),
+              ],
+            )
           : DecoratedBox(
               decoration: const BoxDecoration(
                 border: Border(top: BorderSide(color: AppTheme.linea)),
@@ -410,4 +570,23 @@ class _ClienteShellState extends State<ClienteShell> {
             ),
     );
   }
+
+  Widget _botonCarrito() => Padding(
+    padding: const EdgeInsets.only(right: 16),
+    child: IconButton.outlined(
+      tooltip: 'Ver carrito',
+      style: IconButton.styleFrom(
+        side: const BorderSide(color: AppTheme.linea),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      onPressed: verCarrito,
+      icon: Badge(
+        backgroundColor: AppTheme.oro,
+        textColor: AppTheme.fondo,
+        isLabelVisible: carrito.isNotEmpty,
+        label: Text('${carrito.values.fold<int>(0, (a, b) => a + b.cantidad)}'),
+        child: const Icon(Icons.shopping_bag_outlined, size: 21),
+      ),
+    ),
+  );
 }

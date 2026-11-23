@@ -11,9 +11,11 @@ class AuthRouter extends StatefulWidget {
     super.key,
     required this.catalogo,
     this.moduloAdminInicial = 0,
+    this.escaparateWeb = false,
   });
   final CatalogoState catalogo;
   final int moduloAdminInicial;
+  final bool escaparateWeb;
 
   @override
   State<AuthRouter> createState() => _AuthRouterState();
@@ -26,19 +28,20 @@ class _AuthRouterState extends State<AuthRouter> {
   @override
   Widget build(BuildContext context) {
     final session = SessionScope.of(context);
-    if (!session.autenticado) {
+    if (!session.autenticado && !widget.escaparateWeb) {
       _sesion = null;
       return Scaffold(
         body: SafeArea(child: AdminLoginScreen(session: session)),
       );
     }
-    final identidad =
-        '${session.cuentaVerificada?.identificador}:${session.estado.name}';
+    final identidad = widget.escaparateWeb && !session.esAdmin
+        ? 'escaparate'
+        : '${session.cuentaVerificada?.identificador}:${session.estado.name}';
     if (_sesion != identidad) {
       _sesion = identidad;
       _navigator = GlobalKey<NavigatorState>();
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) widget.catalogo.cargar();
+        if (mounted && !widget.catalogo.enVivo) widget.catalogo.cargar();
       });
     }
     return ListenableBuilder(
@@ -59,6 +62,10 @@ class _AuthRouterState extends State<AuthRouter> {
                       moduloInicial: widget.moduloAdminInicial,
                     )
                   : ClienteShell(
+                      web: widget.escaparateWeb,
+                      cuenta: widget.escaparateWeb && !session.autenticado
+                          ? AdminLoginScreen(session: session)
+                          : null,
                       productos:
                           widget.catalogo.productos.every((p) => p.activo)
                           ? widget.catalogo.productos

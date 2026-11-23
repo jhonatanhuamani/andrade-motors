@@ -10,10 +10,12 @@ class ServicioCard extends StatelessWidget {
     required this.servicio,
     required this.onReservar,
     this.index = 0,
+    this.mostrarImagen = true,
   });
   final Servicio servicio;
   final VoidCallback onReservar;
   final int index;
+  final bool mostrarImagen;
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 16),
@@ -22,7 +24,7 @@ class ServicioCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (servicio.imagenAsset != null)
+          if (mostrarImagen && servicio.imagenAsset != null)
             Image.asset(
               servicio.imagenAsset!,
               height: 160,

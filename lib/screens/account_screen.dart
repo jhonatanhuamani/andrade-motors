@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../auth/session_scope.dart';
 import '../widgets/premium_components.dart';
+import 'delivery_pedidos_screen.dart';
+import 'sensores_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -33,6 +35,23 @@ class AccountScreen extends StatelessWidget {
                 label: const Text('Cerrar sesión'),
               ),
             ],
+          ),
+        ),
+        if (!session.esAdmin) ...[
+          const SizedBox(height: 20),
+          const MisPedidosTile(),
+        ],
+        const SizedBox(height: 20),
+        PremiumPanel(
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const IconTile(Icons.sensors),
+            title: const Text('Sensores del dispositivo'),
+            subtitle: const Text('Movimiento, proximidad e iluminación'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push<void>(
+              MaterialPageRoute(builder: (_) => const SensoresScreen()),
+            ),
           ),
         ),
         const SizedBox(height: 20),

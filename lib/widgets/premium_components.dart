@@ -266,11 +266,40 @@ class PageIntro extends StatelessWidget {
 }
 
 class ResponsiveProductGrid extends StatelessWidget {
-  const ResponsiveProductGrid({super.key, required this.children});
+  const ResponsiveProductGrid({
+    super.key,
+    required this.children,
+    this.web = false,
+  });
+  final bool web;
   final List<Widget> children;
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
+      if (web) {
+        final width = constraints.maxWidth;
+        final count = width >= 1160
+            ? 4
+            : width > 960
+            ? 3
+            : width >= 400
+            ? 2
+            : 1;
+        final escala = MediaQuery.textScalerOf(context);
+        return GridView.builder(
+          primary: false,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: count,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            mainAxisExtent: 472 + (escala.scale(30) - 30).clamp(0.0, 300.0) * 4,
+          ),
+          itemCount: children.length,
+          itemBuilder: (_, i) => children[i],
+        );
+      }
       final count = constraints.maxWidth >= 850
           ? 4
           : constraints.maxWidth >= 620

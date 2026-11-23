@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../data/contacto_tienda.dart';
 import '../models/producto.dart';
+import 'cliente/tienda_web.dart';
 import '../theme/app_theme.dart';
 import '../widgets/premium_components.dart';
 import '../widgets/producto_preview.dart';
@@ -13,8 +15,10 @@ class ProductoDetalleScreen extends StatefulWidget {
     required this.favorito,
     required this.onFavorito,
     required this.onCarrito,
+    this.web = false,
   });
   final Producto producto;
+  final bool web;
   final bool favorito;
   final VoidCallback onFavorito, onCarrito;
   final void Function(int) onAgregar;
@@ -25,6 +29,15 @@ class ProductoDetalleScreen extends StatefulWidget {
 class _ProductoDetalleScreenState extends State<ProductoDetalleScreen> {
   int cantidad = 1;
   late bool favorito = widget.favorito;
+  @override
+  void didUpdateWidget(covariant ProductoDetalleScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    cantidad = cantidad.clamp(
+      1,
+      widget.producto.stock > 0 ? widget.producto.stock : 1,
+    );
+  }
+
   void agregar() {
     widget.onAgregar(cantidad);
     ScaffoldMessenger.of(context).showSnackBar(
@@ -67,7 +80,9 @@ class _ProductoDetalleScreenState extends State<ProductoDetalleScreen> {
       ),
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: AppTheme.anchoContenido),
+          constraints: BoxConstraints(
+            maxWidth: widget.web ? anchoTienda : AppTheme.anchoContenido,
+          ),
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 4, 20, 32),
             children: [
@@ -250,6 +265,14 @@ class _ProductoDetalleScreenState extends State<ProductoDetalleScreen> {
                           label: const Text('Agregar al carrito'),
                         ),
                       ),
+                      if (widget.web) ...[
+                        const SizedBox(height: 10),
+                        BotonWhatsApp(
+                          etiqueta: 'Consultar por WhatsApp',
+                          mensaje:
+                              'Hola, quisiera consultar por ${p.nombre} (${p.sku}).',
+                        ),
+                      ],
                       const SizedBox(height: 9),
                       Center(
                         child: Text(

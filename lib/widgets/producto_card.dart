@@ -12,8 +12,10 @@ class ProductoCard extends StatefulWidget {
     required this.onFavorito,
     required this.onTap,
     this.onAgregar,
+    this.web = false,
   });
   final Producto producto;
+  final bool web;
   final bool favorito;
   final VoidCallback onFavorito, onTap;
   final VoidCallback? onAgregar;
@@ -28,6 +30,54 @@ class _ProductoCardState extends State<ProductoCard> {
     final p = widget.producto;
     final textScaler = MediaQuery.textScalerOf(context);
     final stockColor = p.stock <= 5 ? AppTheme.alerta : AppTheme.verde;
+    final imagen = Stack(
+      fit: widget.web ? StackFit.expand : StackFit.loose,
+      children: [
+        Hero(
+          tag: 'producto-${p.sku}',
+          child: ProductoPreview(producto: p, height: widget.web ? 195 : 212),
+        ),
+        Positioned(
+          top: 9,
+          left: 9,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+            decoration: BoxDecoration(
+              color: const Color(0xFF111418).withValues(alpha: .85),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Text(
+              p.stock <= 5 ? 'STOCK BAJO' : 'PREMIUM',
+              style: TextStyle(
+                color: p.stock <= 5 ? AppTheme.alerta : AppTheme.oro,
+                fontSize: 8,
+                fontWeight: FontWeight.w800,
+                letterSpacing: .4,
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          top: 5,
+          right: 5,
+          child: IconButton(
+            tooltip: widget.favorito ? 'Quitar favorito' : 'Guardar favorito',
+            visualDensity: VisualDensity.compact,
+            style: IconButton.styleFrom(
+              backgroundColor: const Color(0xFF111418).withValues(alpha: .7),
+            ),
+            onPressed: widget.onFavorito,
+            icon: Icon(
+              widget.favorito
+                  ? Icons.favorite_rounded
+                  : Icons.favorite_border_rounded,
+              color: widget.favorito ? AppTheme.oro : Colors.white70,
+              size: 17,
+            ),
+          ),
+        ),
+      ],
+    );
     return MouseRegion(
       onEnter: (_) => setState(() => hover = true),
       onExit: (_) => setState(() => hover = false),
@@ -55,63 +105,7 @@ class _ProductoCardState extends State<ProductoCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Stack(
-                  children: [
-                    Hero(
-                      tag: 'producto-${p.sku}',
-                      child: ProductoPreview(producto: p, height: 212),
-                    ),
-                    Positioned(
-                      top: 9,
-                      left: 9,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF111418).withValues(alpha: .85),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Text(
-                          p.stock <= 5 ? 'STOCK BAJO' : 'PREMIUM',
-                          style: TextStyle(
-                            color: p.stock <= 5
-                                ? AppTheme.alerta
-                                : AppTheme.oro,
-                            fontSize: 8,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: .4,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 5,
-                      right: 5,
-                      child: IconButton(
-                        tooltip: widget.favorito
-                            ? 'Quitar favorito'
-                            : 'Guardar favorito',
-                        visualDensity: VisualDensity.compact,
-                        style: IconButton.styleFrom(
-                          backgroundColor: const Color(0xFF111418)
-                              .withValues(alpha: .7),
-                        ),
-                        onPressed: widget.onFavorito,
-                        icon: Icon(
-                          widget.favorito
-                              ? Icons.favorite_rounded
-                              : Icons.favorite_border_rounded,
-                          color: widget.favorito
-                              ? AppTheme.oro
-                              : Colors.white70,
-                          size: 17,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                if (widget.web) Expanded(child: imagen) else imagen,
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
                   child: Column(
@@ -219,6 +213,14 @@ class _ProductoCardState extends State<ProductoCard> {
                           ),
                         ),
                       ),
+                      if (widget.web)
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: widget.onTap,
+                            child: const Text('Ver producto'),
+                          ),
+                        ),
                     ],
                   ),
                 ),

@@ -15,8 +15,12 @@ class CatalogoScreen extends StatefulWidget {
     required this.onFavorito,
     required this.onProducto,
     required this.onAgregar,
+    this.web = false,
+    this.footer = const SizedBox.shrink(),
   });
   final String categoria, busqueda;
+  final bool web;
+  final Widget footer;
   final List<Producto> productos;
   final Set<String> favoritos;
   final void Function(Producto) onFavorito, onProducto, onAgregar;
@@ -30,6 +34,7 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
   late final controller = TextEditingController(text: busqueda);
   String orden = 'Selección';
   bool soloFavoritos = false;
+  String disponibilidad = 'Todos';
   @override
   void dispose() {
     controller.dispose();
@@ -92,16 +97,35 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
   );
   @override
   Widget build(BuildContext context) {
+    final categorias = widget.web
+        ? {
+            'Todos',
+            ...widget.productos.map((p) => p.categoria),
+            categoria,
+          }.toList()
+        : ['Todos', 'Repuestos', 'Accesorios', 'Cascos', 'Aceites', 'Llantas'];
+    final filtrosCategoria = [
+      for (final c in categorias)
+        ChoiceChip(
+          label: Text(c),
+          selected: c == categoria,
+          onSelected: (_) => setState(() => categoria = c),
+        ),
+    ];
     final lista = widget.productos
         .where(
           (p) =>
               (categoria == 'Todos' ||
                   p.categoria == categoria ||
-                  (categoria == 'Cascos' && p.nombre.contains('Casco'))) &&
+                  (!widget.web &&
+                      categoria == 'Cascos' &&
+                      p.nombre.contains('Casco'))) &&
               ('${p.nombre} ${p.sku}'.toLowerCase().contains(
-                busqueda.toLowerCase(),
+                busqueda.trim().toLowerCase(),
               )) &&
-              (!soloFavoritos || widget.favoritos.contains(p.sku)),
+              (!soloFavoritos || widget.favoritos.contains(p.sku)) &&
+              (disponibilidad == 'Todos' ||
+                  (p.stock > 0) == (disponibilidad == 'En stock')),
         )
         .toList();
     if (orden == 'Menor precio') {
@@ -113,9 +137,9 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
       children: [
-        const PageIntro(
+        PageIntro(
           kicker: 'Andrade / Tienda',
-          title: 'Catálogo',
+          title: widget.web ? 'Productos' : 'Catálogo',
           subtitle: 'Encuentra el componente perfecto para tu moto.',
         ),
         TextField(
@@ -141,31 +165,35 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
           ),
         ),
         const SizedBox(height: 18),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children:
-                [
-                      'Todos',
-                      'Repuestos',
-                      'Accesorios',
-                      'Cascos',
-                      'Aceites',
-                      'Llantas',
-                    ]
-                    .map(
-                      (c) => Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: ChoiceChip(
-                          label: Text(c),
-                          selected: c == categoria,
-                          onSelected: (_) => setState(() => categoria = c),
-                        ),
-                      ),
-                    )
-                    .toList(),
+        if (widget.web) ...[
+          Wrap(spacing: 8, runSpacing: 8, children: filtrosCategoria),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 12,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              const Text('Disponibilidad'),
+              for (final estado in ['Todos', 'En stock', 'Sin stock'])
+                ChoiceChip(
+                  label: Text(estado == 'Todos' ? 'Cualquier stock' : estado),
+                  selected: disponibilidad == estado,
+                  onSelected: (_) => setState(() => disponibilidad = estado),
+                ),
+            ],
           ),
-        ),
+        ] else
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final chip in filtrosCategoria)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: chip,
+                  ),
+              ],
+            ),
+          ),
         const SizedBox(height: 20),
         Row(
           children: [
@@ -241,6 +269,7 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
                       busqueda = '';
                       categoria = 'Todos';
                       soloFavoritos = false;
+                      disponibilidad = 'Todos';
                     });
                   },
                   child: const Text('Ver toda la colección'),
@@ -249,10 +278,12 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
             ),
           ),
         ResponsiveProductGrid(
+          web: widget.web,
           children: lista
               .map(
                 (p) => ProductoCard(
                   producto: p,
+                  web: widget.web,
                   favorito: widget.favoritos.contains(p.sku),
                   onFavorito: () => widget.onFavorito(p),
                   onTap: () => widget.onProducto(p),
@@ -275,6 +306,7 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
             ),
           ],
         ),
+        widget.footer,
       ],
     );
   }

@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 
 import '../data/datos_demo.dart';
+import 'cliente/tienda_web.dart';
 import '../models/servicio.dart';
 import '../widgets/servicio_card.dart';
 import '../widgets/premium_components.dart';
 import '../theme/app_theme.dart';
 
 class ServiciosScreen extends StatelessWidget {
-  const ServiciosScreen({super.key, required this.onReservar});
+  const ServiciosScreen({
+    super.key,
+    required this.onReservar,
+    this.web = false,
+    this.footer = const SizedBox.shrink(),
+  });
+  final bool web;
+  final Widget footer;
   final void Function(Servicio) onReservar;
   @override
   Widget build(BuildContext context) => ListView(
     padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
     children: [
-      const PageIntro(
+      PageIntro(
         kicker: 'Andrade / Servicio técnico',
-        title: 'Cuida lo que\nte mueve.',
+        title: web ? 'Servicios de taller' : 'Cuida lo que\nte mueve.',
         subtitle: 'Mantenimiento con atención al detalle. Para que tu única preocupación sea el camino.',
       ),
       PremiumPanel(
@@ -67,27 +75,30 @@ class ServiciosScreen extends StatelessWidget {
         'Mantenimiento a tu medida',
         subtitle: 'El cuidado correcto, en el momento indicado.',
       ),
-      LayoutBuilder(
-        builder: (context, constraints) => Wrap(
-          spacing: 16,
-          children: servicios
-              .asMap()
-              .entries
-              .map(
-                (e) => SizedBox(
-                  width: constraints.maxWidth > 650
-                      ? (constraints.maxWidth - 16) / 2
-                      : constraints.maxWidth,
-                  child: ServicioCard(
-                    servicio: e.value,
-                    index: e.key,
-                    onReservar: () => onReservar(e.value),
+      if (web)
+        ServiciosTiendaGrid(onReservar: onReservar)
+      else
+        LayoutBuilder(
+          builder: (context, constraints) => Wrap(
+            spacing: 16,
+            children: servicios
+                .asMap()
+                .entries
+                .map(
+                  (e) => SizedBox(
+                    width: constraints.maxWidth > 650
+                        ? (constraints.maxWidth - 16) / 2
+                        : constraints.maxWidth,
+                    child: ServicioCard(
+                      servicio: e.value,
+                      index: e.key,
+                      onReservar: () => onReservar(e.value),
+                    ),
                   ),
-                ),
-              )
-              .toList(),
+                )
+                .toList(),
+          ),
         ),
-      ),
       const SizedBox(height: 8),
       const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,6 +117,7 @@ class ServiciosScreen extends StatelessWidget {
           ),
         ],
       ),
+      footer,
     ],
   );
 }
