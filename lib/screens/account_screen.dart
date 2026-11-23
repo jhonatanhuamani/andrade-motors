@@ -6,7 +6,9 @@ import 'delivery_pedidos_screen.dart';
 import 'sensores_screen.dart';
 
 class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key});
+  const AccountScreen({super.key, this.onFavoritos});
+
+  final VoidCallback? onFavoritos;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,18 @@ class AccountScreen extends StatelessWidget {
         if (!session.esAdmin) ...[
           const SizedBox(height: 20),
           const MisPedidosTile(),
+        ],
+        if (session.autenticado && !session.esAdmin && onFavoritos != null) ...[
+          const SizedBox(height: 20),
+          PremiumPanel(
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const IconTile(Icons.favorite_border_rounded),
+              title: const Text('Mis favoritos'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: onFavoritos,
+            ),
+          ),
         ],
         const SizedBox(height: 20),
         PremiumPanel(

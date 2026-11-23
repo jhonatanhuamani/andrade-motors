@@ -1,11 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 
+import '../models/delivery_aviso.dart';
 import '../models/delivery_pedido.dart';
 
 /// Almacén en memoria, compartido por clientes y administración en esta app.
 class DeliveryState extends ChangeNotifier {
   final _pedidos = <String, DeliveryPedido>{};
   int _siguiente = 0;
+  final _avisos = StreamController<DeliveryAviso>.broadcast();
+
+  Stream<DeliveryAviso> get avisos => _avisos.stream;
 
   List<DeliveryPedido> get pedidos =>
       _pedidos.values.toList(growable: false).reversed.toList(growable: false);
@@ -46,8 +52,17 @@ class DeliveryState extends ChangeNotifier {
   void cambiarEstado(String id, DeliveryEstado estado) {
     final pedido = _pedidos[id];
     if (pedido == null || pedido.estado == estado) return;
-    _pedidos[id] = pedido.conEstado(estado);
+    final actualizado = pedido.conEstado(estado);
+    _pedidos[id] = actualizado;
+    final aviso = DeliveryAviso.dePedido(actualizado);
+    if (aviso != null) _avisos.add(aviso);
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    unawaited(_avisos.close());
+    super.dispose();
   }
 }
 

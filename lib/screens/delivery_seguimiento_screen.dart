@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../auth/session_scope.dart';
 import '../data/delivery_state.dart';
 import '../models/delivery_pedido.dart';
 import '../theme/app_theme.dart';
 import '../widgets/premium_components.dart';
+import 'delivery_mapa_pedido_screen.dart';
+import 'delivery_comprobante_screen.dart';
 
 class DeliverySeguimientoScreen extends StatelessWidget {
   const DeliverySeguimientoScreen({
@@ -17,23 +18,6 @@ class DeliverySeguimientoScreen extends StatelessWidget {
   final String pedidoId;
   final bool administrar;
 
-  Future<void> _abrirMapa(BuildContext context, DeliveryUbicacion ubicacion) async {
-    final url = Uri.https('www.google.com', '/maps/search/', {
-      'api': '1',
-      'query': '${ubicacion.latitud},${ubicacion.longitud}',
-    });
-    try {
-      if (await launchUrl(url, mode: LaunchMode.externalApplication)) return;
-    } on Exception {
-      // El navegador o sistema puede rechazar la apertura del enlace.
-    }
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No se pudo abrir Google Maps.')),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final session = SessionScope.of(context);
@@ -41,9 +25,12 @@ class DeliverySeguimientoScreen extends StatelessWidget {
     final pedido = store.buscar(pedidoId);
     return Scaffold(
       appBar: AppBar(
-        title: Text(administrar ? 'Pedido delivery' : 'Seguimiento del delivery'),
+        title: Text(
+          administrar ? 'Pedido delivery' : 'Seguimiento del delivery',
+        ),
       ),
-      body: pedido == null ||
+      body:
+          pedido == null ||
               (administrar
                   ? !session.esAdmin
                   : pedido.clienteId != session.cuentaVerificada?.identificador)
@@ -59,22 +46,43 @@ class DeliverySeguimientoScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SectionHeading(pedido.id, subtitle: pedido.estado.nombre),
+                          SectionHeading(
+                            pedido.id,
+                            subtitle: pedido.estado.nombre,
+                          ),
                           if (administrar) Text('Cliente: ${pedido.cliente}'),
                           Text('Total: ${importeDelivery(pedido.total)}'),
                           Text('Dirección: ${pedido.direccion}'),
-                          Text('Referencia: ${pedido.referencia.isEmpty ? '—' : pedido.referencia}'),
-                          Text('Latitud: ${pedido.ubicacion.latitud.toStringAsFixed(6)}'),
-                          Text('Longitud: ${pedido.ubicacion.longitud.toStringAsFixed(6)}'),
-                          Text('Distancia aproximada: ${pedido.distanciaKm.toStringAsFixed(1)} km'),
-                          if (pedido.ubicacion.simulada)
-                            const Text('Ubicación simulada', style: TextStyle(color: AppTheme.oro)),
+                          Text(
+                            'Referencia: ${pedido.referencia.isEmpty ? '—' : pedido.referencia}',
+                          ),
+                          Text(
+                            'Latitud: ${pedido.ubicacion.latitud.toStringAsFixed(6)}',
+                          ),
+                          Text(
+                            'Longitud: ${pedido.ubicacion.longitud.toStringAsFixed(6)}',
+                          ),
+                          Text(
+                            'Distancia aproximada: ${pedido.distanciaKm.toStringAsFixed(1)} km',
+                          ),
+                          Text('Origen: ${pedido.ubicacion.origen.etiqueta}'),
+                          if (administrar || session.autenticado)
+                            VerComprobanteButton(
+                              pedidoId: pedido.id,
+                              administrar: administrar,
+                            ),
                           if (administrar) ...[
                             const SizedBox(height: 16),
                             OutlinedButton.icon(
-                              onPressed: () => _abrirMapa(context, pedido.ubicacion),
-                              icon: const Icon(Icons.open_in_new),
-                              label: const Text('Abrir ubicación en Google Maps'),
+                              onPressed: () => Navigator.of(context).push<void>(
+                                MaterialPageRoute(
+                                  builder: (_) => DeliveryMapaPedidoScreen(
+                                    pedidoId: pedido.id,
+                                  ),
+                                ),
+                              ),
+                              icon: const Icon(Icons.map_outlined),
+                              label: const Text('Ver ubicación'),
                             ),
                             const SizedBox(height: 12),
                             const Text('Estado del pedido'),
@@ -82,7 +90,8 @@ class DeliverySeguimientoScreen extends StatelessWidget {
                               value: pedido.estado,
                               isExpanded: true,
                               onChanged: (estado) {
-                                if (estado != null && SessionScope.of(context).esAdmin) {
+                                if (estado != null &&
+                                    SessionScope.of(context).esAdmin) {
                                   store.cambiarEstado(pedido.id, estado);
                                 }
                               },
@@ -128,27 +137,42 @@ class _LineaDeTiempo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionHeading('Estado de entrega', subtitle: 'Seguimiento demostrativo'),
-          Text('Distancia restante simulada: ${(pedido.distanciaKm * fraccion).toStringAsFixed(1)} km'),
+          const SectionHeading(
+            'Estado de entrega',
+            subtitle: 'Seguimiento demostrativo',
+          ),
+          Text(
+            'Distancia restante simulada: ${(pedido.distanciaKm * fraccion).toStringAsFixed(1)} km',
+          ),
           Text('Tiempo estimado simulado: $minutos min'),
           const SizedBox(height: 12),
           for (final estado in DeliveryEstado.values)
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Icon(
-                estado == pedido.estado ? Icons.radio_button_checked :
-                  estado.index < pedido.estado.index ? Icons.check_circle_outline :
-                    Icons.radio_button_unchecked,
-                color: estado == pedido.estado ? AppTheme.oro : AppTheme.secundario,
+                estado == pedido.estado
+                    ? Icons.radio_button_checked
+                    : estado.index < pedido.estado.index
+                    ? Icons.check_circle_outline
+                    : Icons.radio_button_unchecked,
+                color: estado == pedido.estado
+                    ? AppTheme.oro
+                    : AppTheme.secundario,
               ),
               title: Text(
                 estado.hito,
                 style: TextStyle(
-                  color: estado == pedido.estado ? AppTheme.oro : AppTheme.texto,
-                  fontWeight: estado == pedido.estado ? FontWeight.bold : FontWeight.normal,
+                  color: estado == pedido.estado
+                      ? AppTheme.oro
+                      : AppTheme.texto,
+                  fontWeight: estado == pedido.estado
+                      ? FontWeight.bold
+                      : FontWeight.normal,
                 ),
               ),
-              subtitle: estado == pedido.estado ? const Text('Estado actual') : null,
+              subtitle: estado == pedido.estado
+                  ? const Text('Estado actual')
+                  : null,
             ),
         ],
       ),

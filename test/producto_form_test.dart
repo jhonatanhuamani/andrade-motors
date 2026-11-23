@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:andrade_motors/auth/auth_router.dart';
 import 'package:andrade_motors/data/datos_demo.dart' as demo;
 import 'package:andrade_motors/data/producto_edicion.dart';
@@ -9,7 +11,9 @@ import 'package:andrade_motors/screens/cliente/cliente_shell.dart';
 import 'package:andrade_motors/screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'support/admin_navigation.dart';
 import 'support/fake_admin_auth.dart';
@@ -355,4 +359,97 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  for (final editando in [false, true]) {
+    testWidgets(
+      editando
+          ? 'Editar permite cámara y galería y conserva la vista al cancelar'
+          : 'Agregar permite cámara y galería y conserva la vista al cancelar',
+      (tester) async {
+        await abrirAlta(tester);
+        if (editando) {
+          final contexto = tester.element(find.byType(ProductoFormScreen));
+          Navigator.of(contexto).push<void>(
+            MaterialPageRoute(
+              builder: (_) =>
+                  ProductoFormScreen(producto: demo.productos.first),
+            ),
+          );
+          await tester.pumpAndSettle();
+        }
+
+        const canal = MethodChannel('plugins.flutter.io/image_picker');
+        final mensajero = tester.binding.defaultBinaryMessenger;
+        final fuentes = <int>[];
+        var permitirFoto = true;
+        var permisoDenegado = false;
+        final foto = File('web/favicon.png').absolute.path;
+        mensajero.setMockMethodCallHandler(canal, (call) async {
+          expect(call.method, 'pickImage');
+          fuentes.add(call.arguments['source'] as int);
+          if (permisoDenegado) {
+            throw PlatformException(code: 'camera_access_denied');
+          }
+          return permitirFoto ? foto : null;
+        });
+        addTearDown(() => mensajero.setMockMethodCallHandler(canal, null));
+
+        Finder boton(String label) => find.text(label);
+        final iniciar = boton(editando ? 'Cambiar imagen' : 'Agregar imagen');
+        await pulsar(tester, iniciar);
+        await pulsar(tester, find.text('Cancelar'));
+        expect(fuentes, isEmpty);
+
+        await pulsar(tester, iniciar);
+        await pulsar(tester, find.text('Cámara'));
+        final preview = find.descendant(
+          of: find.byType(ProductoFormScreen),
+          matching: find.byWidgetPredicate(
+            (w) => w is Image && w.image is MemoryImage,
+          ),
+        );
+        Future<ImageProvider<Object>> esperarVista([
+          ImageProvider<Object>? anterior,
+        ]) async {
+          for (var intento = 0; intento < 50; intento++) {
+            final vistas = tester.widgetList<Image>(preview);
+            if (vistas.length == 1 && vistas.single.image != anterior) {
+              return vistas.single.image;
+            }
+            await tester.runAsync(
+              () => Future<void>.delayed(const Duration(milliseconds: 20)),
+            );
+            await tester.pump(const Duration(milliseconds: 16));
+          }
+          throw StateError('No se actualizó la previsualización.');
+        }
+
+        final imagen = await esperarVista();
+        expect(fuentes, [ImageSource.camera.index]);
+
+        permitirFoto = false;
+        await pulsar(tester, boton('Cambiar imagen'));
+        await pulsar(tester, find.text('Galería'));
+        expect(fuentes, [ImageSource.camera.index, ImageSource.gallery.index]);
+        expect(tester.widget<Image>(preview).image, equals(imagen));
+        expect(find.textContaining('No se pudo'), findsNothing);
+
+        permitirFoto = true;
+        await pulsar(tester, boton('Cambiar imagen'));
+        await pulsar(tester, find.text('Galería'));
+        final imagenGaleria = await esperarVista(imagen);
+        expect(fuentes.last, ImageSource.gallery.index);
+
+        permisoDenegado = true;
+        await pulsar(tester, boton('Cambiar imagen'));
+        await pulsar(tester, find.text('Cámara'));
+        expect(
+          find.textContaining('No se pudo acceder a la cámara'),
+          findsOneWidget,
+        );
+        expect(tester.widget<Image>(preview).image, equals(imagenGaleria));
+        expect(firestore.confirmaciones, 0);
+      },
+    );
+  }
 }

@@ -10,17 +10,20 @@ import 'auth/admin_session.dart';
 import 'auth/auth_router.dart';
 import 'auth/session_scope.dart';
 import 'data/catalogo_state.dart';
+import 'data/delivery_fcm.dart';
 import 'data/delivery_state.dart';
 import 'data/productos_repository.dart';
 import 'firebase_options.dart';
 import 'screens/presentacion_screen.dart';
 import 'theme/app_theme.dart';
+import 'widgets/delivery_push_host.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
-    const AndradeMotorsApp(
+    AndradeMotorsApp(
+      deliveryPush: DeliveryFcm.paraPlataformaActual(),
       mostrarPresentacion: true,
       catalogoEnVivo: true,
       escaparateWeb: kIsWeb,
@@ -32,12 +35,14 @@ class AndradeMotorsApp extends StatefulWidget {
   const AndradeMotorsApp({
     super.key,
     this.productosRepository,
+    this.deliveryPush,
     this.adminAuthService,
     this.mostrarPresentacion = false,
     this.catalogoEnVivo = false,
     this.escaparateWeb = false,
   });
   final AdminAuthService? adminAuthService;
+  final DeliveryCanalPush? deliveryPush;
   final ProductosRepository? productosRepository;
   final bool mostrarPresentacion, catalogoEnVivo, escaparateWeb;
   @override
@@ -49,6 +54,8 @@ class _AndradeMotorsAppState extends State<AndradeMotorsApp>
   late final AdminSession session;
   late final CatalogoState catalogo;
   final delivery = DeliveryState();
+  final _navigator = GlobalKey<NavigatorState>();
+  final _mensajero = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -97,15 +104,31 @@ class _AndradeMotorsAppState extends State<AndradeMotorsApp>
         catalogo: catalogo,
         child: MaterialApp(
           title: 'ANDRADE MOTORS',
+          navigatorKey: _navigator,
+          scaffoldMessengerKey: _mensajero,
           debugShowCheckedModeBanner: false,
           theme: AppTheme.oscuro,
           locale: const Locale('es', 'PE'),
           supportedLocales: const [Locale('es', 'PE')],
           localizationsDelegates: GlobalMaterialLocalizations.delegates,
           onGenerateRoute: (settings) => rutaAdministrativa(settings, catalogo),
-          builder: widget.mostrarPresentacion
-              ? (context, child) => PresentacionScreen(child: child!)
-              : null,
+          builder: (context, child) {
+            Widget contenido = child!;
+            final push = widget.deliveryPush;
+            if (push != null) {
+              contenido = DeliveryPushHost(
+                sesion: session,
+                delivery: delivery,
+                canal: push,
+                navigator: _navigator,
+                mensajero: _mensajero,
+                child: contenido,
+              );
+            }
+            return widget.mostrarPresentacion
+                ? PresentacionScreen(child: contenido)
+                : contenido;
+          },
           home: AuthRouter(
             catalogo: catalogo,
             escaparateWeb: widget.escaparateWeb,

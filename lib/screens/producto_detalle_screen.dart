@@ -28,7 +28,6 @@ class ProductoDetalleScreen extends StatefulWidget {
 
 class _ProductoDetalleScreenState extends State<ProductoDetalleScreen> {
   int cantidad = 1;
-  late bool favorito = widget.favorito;
   @override
   void didUpdateWidget(covariant ProductoDetalleScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -52,15 +51,13 @@ class _ProductoDetalleScreenState extends State<ProductoDetalleScreen> {
   @override
   Widget build(BuildContext context) {
     final p = widget.producto;
+    final favorito = widget.favorito;
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
             tooltip: favorito ? 'Quitar favorito' : 'Guardar favorito',
-            onPressed: () {
-              widget.onFavorito();
-              setState(() => favorito = !favorito);
-            },
+            onPressed: widget.onFavorito,
             icon: Icon(
               favorito ? Icons.favorite_rounded : Icons.favorite_border_rounded,
               color: favorito ? AppTheme.oro : AppTheme.texto,

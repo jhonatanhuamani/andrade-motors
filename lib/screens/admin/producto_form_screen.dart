@@ -1,9 +1,10 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:image_picker/image_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show PlatformException;
+import 'package:image_picker/image_picker.dart';
 
 import '../../auth/session_scope.dart';
 import '../../data/catalogo_state.dart';
@@ -64,9 +65,50 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
           .toList();
   Future<void> _seleccionarFotografia() async {
     setState(() => _seleccionando = true);
+    ImageSource? fuente;
     try {
+      fuente = await showModalBottomSheet<ImageSource>(
+        context: context,
+        showDragHandle: true,
+        builder: (hoja) => SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Seleccionar imagen',
+                  style: Theme.of(hoja).textTheme.titleLarge,
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.photo_camera_outlined,
+                    color: AppTheme.oro,
+                  ),
+                  title: const Text('Cámara'),
+                  subtitle: const Text('Tomar foto'),
+                  onTap: () => Navigator.pop(hoja, ImageSource.camera),
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.photo_library_outlined,
+                    color: AppTheme.oro,
+                  ),
+                  title: const Text('Galería'),
+                  subtitle: const Text('Elegir desde galería'),
+                  onTap: () => Navigator.pop(hoja, ImageSource.gallery),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(hoja),
+                  child: const Text('Cancelar'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      if (fuente == null || !mounted) return;
       final archivo = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
+        source: fuente,
         maxWidth: 1800,
         maxHeight: 1800,
         imageQuality: 85,
@@ -101,9 +143,25 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
       } finally {
         codec.dispose();
       }
-    } catch (error) {
+    } on FormatException catch (error) {
+      if (mounted) setState(() => _error = error.message);
+    } on PlatformException {
       if (mounted) {
-        setState(() => _error = 'No se pudo seleccionar la fotografía: $error');
+        setState(
+          () => _error = fuente == ImageSource.camera
+              ? 'No se pudo acceder a la cámara. Verifica los permisos de la aplicación.'
+              : 'No se pudo acceder a la galería. Verifica los permisos de la aplicación.',
+        );
+      }
+    } on UnsupportedError {
+      if (mounted) {
+        setState(
+          () => _error = 'Esta plataforma no admite la opción seleccionada.',
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() => _error = 'No se pudo procesar la fotografía.');
       }
     } finally {
       if (mounted) setState(() => _seleccionando = false);
@@ -375,7 +433,11 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                             label: Text(
                               _seleccionando
                                   ? 'Procesando…'
-                                  : 'Seleccionar fotografía',
+                                  : _fotografia != null ||
+                                        _imagen != null ||
+                                        widget.producto?.imagenUrl != null
+                                  ? 'Cambiar imagen'
+                                  : 'Agregar imagen',
                             ),
                           ),
                           ClipRRect(

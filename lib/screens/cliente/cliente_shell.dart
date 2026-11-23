@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../auth/session_scope.dart';
 import '../../data/catalogo_state.dart';
+import '../../data/favoritos_state.dart';
 import '../../models/delivery_pedido.dart';
 import '../../models/producto.dart';
 import '../../models/servicio.dart';
 import '../home_screen.dart';
+import '../favoritos_screen.dart';
 import '../catalogo_screen.dart';
 import '../delivery_pedidos_screen.dart';
 import '../delivery_seguimiento_screen.dart';
@@ -34,6 +36,35 @@ class ClienteShell extends StatefulWidget {
 
 class _ClienteShellState extends State<ClienteShell> {
   List<Producto> get productos => widget.productos;
+  final _favoritos = FavoritosState();
+  Set<String> get favoritos => _favoritos.skus;
+
+  static String? _clienteUid(BuildContext context) {
+    final sesion = SessionScope.of(context);
+    return sesion.autenticado && !sesion.esAdmin
+        ? sesion.cuentaVerificada?.identificador
+        : null;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _favoritos.cambiarCliente(_clienteUid(context));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _favoritos.addListener(_actualizarFavoritos);
+  }
+
+  void _actualizarFavoritos() => setState(() {});
+
+  @override
+  void dispose() {
+    _favoritos.dispose();
+    super.dispose();
+  }
 
   @override
   void didUpdateWidget(covariant ClienteShell oldWidget) {
@@ -59,7 +90,6 @@ class _ClienteShellState extends State<ClienteShell> {
   String categoria = 'Todos', busqueda = '';
   int revisionCatalogo = 0, revisionReserva = 0;
   String? servicioSeleccionado;
-  final favoritos = <String>{};
   final carrito = <String, ({Producto producto, int cantidad})>{};
   static const labels = [
     'Inicio',
@@ -82,9 +112,20 @@ class _ClienteShellState extends State<ClienteShell> {
     Icons.calendar_month,
     Icons.person,
   ];
-  void favorito(Producto p) => setState(() {
-    if (!favoritos.add(p.sku)) favoritos.remove(p.sku);
-  });
+  void favorito(Producto p) => _favoritos.alternar(p.sku);
+
+  void _verFavoritos() {
+    final uid = _clienteUid(context);
+    if (uid == null) return;
+    Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (context) => _clienteUid(context) == uid
+            ? FavoritosScreen(estado: _favoritos, onProducto: detalle)
+            : const Scaffold(),
+      ),
+    );
+  }
+
   void catalogo(String c, String b) => setState(() {
     categoria = c;
     busqueda = b;
@@ -114,14 +155,19 @@ class _ClienteShellState extends State<ClienteShell> {
             ),
           );
         }
-        return ProductoDetalleScreen(
-          producto: actual,
-          web: widget.web,
-          favorito: favoritos.contains(p.sku),
-          onFavorito: () => favorito(actual),
-          onCarrito: verCarrito,
-          onAgregar: (cantidad) =>
-              setState(() => sumarAlCarrito(actual, cantidad)),
+        // En Web una ruta pública puede permanecer abierta al cambiar de sesión.
+        SessionScope.of(context);
+        return ListenableBuilder(
+          listenable: _favoritos,
+          builder: (context, _) => ProductoDetalleScreen(
+            producto: actual,
+            web: widget.web,
+            favorito: _favoritos.contiene(p.sku),
+            onFavorito: () => favorito(actual),
+            onCarrito: verCarrito,
+            onAgregar: (cantidad) =>
+                setState(() => sumarAlCarrito(actual, cantidad)),
+          ),
         );
       },
     ),
@@ -176,7 +222,8 @@ class _ClienteShellState extends State<ClienteShell> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(22, 0, 22, 24),
           child: SizedBox(
-            height: MediaQuery.sizeOf(ctx).height * (carrito.isEmpty ? .65 : .78),
+            height:
+                MediaQuery.sizeOf(ctx).height * (carrito.isEmpty ? .65 : .78),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -390,7 +437,7 @@ class _ClienteShellState extends State<ClienteShell> {
                   ],
                 )
               else
-                const AccountScreen(),
+                AccountScreen(onFavoritos: _verFavoritos),
               if (widget.web) ContactoTienda(footer: footer),
             ],
           ),

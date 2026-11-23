@@ -30,19 +30,28 @@ class DeliveryItem {
   double get subtotal => cantidad * precioUnitario;
 }
 
+enum DeliveryOrigen {
+  gps('GPS'),
+  manual('Manual'),
+  simulacion('Simulación');
+
+  const DeliveryOrigen(this.etiqueta);
+  final String etiqueta;
+}
+
 class DeliveryUbicacion {
   const DeliveryUbicacion({
     required this.latitud,
     required this.longitud,
     required this.actualizada,
-    required this.simulada,
+    required this.origen,
     this.precisionMetros,
   });
 
   final double latitud, longitud;
   final double? precisionMetros;
   final DateTime actualizada;
-  final bool simulada;
+  final DeliveryOrigen origen;
 }
 
 class DeliveryPedido {
@@ -68,7 +77,8 @@ class DeliveryPedido {
   final DateTime createdAt;
   final DeliveryEstado estado;
 
-  double get subtotal => items.fold<double>(0, (total, item) => total + item.subtotal);
+  double get subtotal =>
+      items.fold<double>(0, (total, item) => total + item.subtotal);
   double get total => subtotal + costoDelivery;
 
   DeliveryPedido conEstado(DeliveryEstado nuevo) => DeliveryPedido(

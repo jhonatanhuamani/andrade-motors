@@ -2,10 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>FirebaseMessagingAutoInitEnabled</key>
+	<false/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Usamos tu ubicación al solicitarla para calcular y gestionar la entrega.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>ANDRADE MOTORS necesita acceso a la cámara para fotografiar productos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Seleccionar fotograf?as para los productos de ANDRADE MOTORS.</string>
 	<key>CFBundleDevelopmentRegion</key>
