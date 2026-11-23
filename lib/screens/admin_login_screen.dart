@@ -48,9 +48,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Center(
-                    child: IconTile(Icons.two_wheeler_rounded, size: 64),
-                  ),
+                  const Center(child: AndradeLogo(size: 64)),
                   const SizedBox(height: 24),
                   const Eyebrow('ANDRADE MOTORS'),
                   const SizedBox(height: 12),

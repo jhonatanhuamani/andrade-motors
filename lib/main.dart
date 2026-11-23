@@ -11,12 +11,13 @@ import 'auth/session_scope.dart';
 import 'data/catalogo_state.dart';
 import 'data/productos_repository.dart';
 import 'firebase_options.dart';
+import 'screens/presentacion_screen.dart';
 import 'theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const AndradeMotorsApp());
+  runApp(const AndradeMotorsApp(mostrarPresentacion: true));
 }
 
 class AndradeMotorsApp extends StatefulWidget {
@@ -24,9 +25,11 @@ class AndradeMotorsApp extends StatefulWidget {
     super.key,
     this.productosRepository,
     this.adminAuthService,
+    this.mostrarPresentacion = false,
   });
   final AdminAuthService? adminAuthService;
   final ProductosRepository? productosRepository;
+  final bool mostrarPresentacion;
   @override
   State<AndradeMotorsApp> createState() => _AndradeMotorsAppState();
 }
@@ -74,6 +77,9 @@ class _AndradeMotorsAppState extends State<AndradeMotorsApp>
         supportedLocales: const [Locale('es', 'PE')],
         localizationsDelegates: GlobalMaterialLocalizations.delegates,
         onGenerateRoute: (settings) => rutaAdministrativa(settings, catalogo),
+        builder: widget.mostrarPresentacion
+            ? (context, child) => PresentacionScreen(child: child!)
+            : null,
         home: AuthRouter(catalogo: catalogo),
       ),
     ),

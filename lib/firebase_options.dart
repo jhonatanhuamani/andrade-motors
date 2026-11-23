@@ -41,46 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyADqr3Udo2ko5aO_ArNtcz1YL62_MJks80',
-    appId: '1:49635903984:web:dc6dac9124eda20c713535',
-    messagingSenderId: '49635903984',
-    projectId: 'andrade-motors-2026',
-    authDomain: 'andrade-motors-2026.firebaseapp.com',
-    storageBucket: 'andrade-motors-2026.firebasestorage.app',
+    apiKey: 'AIzaSyCrrJom6ERksgDeUeqPdhacJl1DHBAXQH0',
+    appId: '1:957170401846:web:8987ba4c2f231293628e97',
+    messagingSenderId: '957170401846',
+    projectId: 'andrade-motors',
+    authDomain: 'andrade-motors.firebaseapp.com',
+    databaseURL: 'https://andrade-motors-default-rtdb.firebaseio.com',
+    storageBucket: 'andrade-motors.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDEYN2fVv6WRKZ2U24WxFcEK9cuBHF8U5c',
-    appId: '1:49635903984:android:b1ce3da6558b662e713535',
-    messagingSenderId: '49635903984',
-    projectId: 'andrade-motors-2026',
-    storageBucket: 'andrade-motors-2026.firebasestorage.app',
+    apiKey: 'AIzaSyDpJ-6HvIbsF4nn_NXb8z4mNVc6YqlZAhY',
+    appId: '1:957170401846:android:88753379a6b80336628e97',
+    messagingSenderId: '957170401846',
+    projectId: 'andrade-motors',
+    databaseURL: 'https://andrade-motors-default-rtdb.firebaseio.com',
+    storageBucket: 'andrade-motors.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDM5d9zGz_TZlSKCJohyalkKyFygZhI7RU',
-    appId: '1:49635903984:ios:e24efb257d29aa2b713535',
-    messagingSenderId: '49635903984',
-    projectId: 'andrade-motors-2026',
-    storageBucket: 'andrade-motors-2026.firebasestorage.app',
+    apiKey: 'AIzaSyBYxP7AjcjaoER88HDfUJXsEeJG8tlL7wE',
+    appId: '1:957170401846:ios:007d80f2a130c0ff628e97',
+    messagingSenderId: '957170401846',
+    projectId: 'andrade-motors',
+    databaseURL: 'https://andrade-motors-default-rtdb.firebaseio.com',
+    storageBucket: 'andrade-motors.firebasestorage.app',
     iosBundleId: 'com.example.andradeMotors',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDM5d9zGz_TZlSKCJohyalkKyFygZhI7RU',
-    appId: '1:49635903984:ios:e24efb257d29aa2b713535',
-    messagingSenderId: '49635903984',
-    projectId: 'andrade-motors-2026',
-    storageBucket: 'andrade-motors-2026.firebasestorage.app',
+    apiKey: 'AIzaSyBYxP7AjcjaoER88HDfUJXsEeJG8tlL7wE',
+    appId: '1:957170401846:ios:007d80f2a130c0ff628e97',
+    messagingSenderId: '957170401846',
+    projectId: 'andrade-motors',
+    databaseURL: 'https://andrade-motors-default-rtdb.firebaseio.com',
+    storageBucket: 'andrade-motors.firebasestorage.app',
     iosBundleId: 'com.example.andradeMotors',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyADqr3Udo2ko5aO_ArNtcz1YL62_MJks80',
-    appId: '1:49635903984:web:80831e428372c99d713535',
-    messagingSenderId: '49635903984',
-    projectId: 'andrade-motors-2026',
-    authDomain: 'andrade-motors-2026.firebaseapp.com',
-    storageBucket: 'andrade-motors-2026.firebasestorage.app',
+    apiKey: 'AIzaSyCrrJom6ERksgDeUeqPdhacJl1DHBAXQH0',
+    appId: '1:957170401846:web:7dac446e861f907e628e97',
+    messagingSenderId: '957170401846',
+    projectId: 'andrade-motors',
+    authDomain: 'andrade-motors.firebaseapp.com',
+    databaseURL: 'https://andrade-motors-default-rtdb.firebaseio.com',
+    storageBucket: 'andrade-motors.firebasestorage.app',
   );
 }

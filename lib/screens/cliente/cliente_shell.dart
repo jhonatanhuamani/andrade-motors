@@ -284,51 +284,7 @@ class _ClienteShellState extends State<ClienteShell> {
     );
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            Container(
-              width: 42,
-              height: 42,
-              decoration: BoxDecoration(
-                gradient: AppTheme.gradienteOro,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.two_wheeler_rounded,
-                color: Color(0xFF231C12),
-                size: 29,
-              ),
-            ),
-            const SizedBox(width: 11),
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'ANDRADE MOTORS',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: .6,
-                    ),
-                  ),
-                  SizedBox(height: 3),
-                  Text(
-                    'PASIÓN EN MOVIMIENTO',
-                    style: TextStyle(
-                      color: AppTheme.oro,
-                      fontSize: 7,
-                      letterSpacing: 2.2,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+        title: const AndradeBrand(),
         actions: [
           IconButton(
             tooltip: 'Notificaciones',

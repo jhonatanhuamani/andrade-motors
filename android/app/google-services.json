@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "49635903984",
-    "project_id": "andrade-motors-2026",
-    "storage_bucket": "andrade-motors-2026.firebasestorage.app"
+    "project_number": "957170401846",
+    "firebase_url": "https://andrade-motors-default-rtdb.firebaseio.com",
+    "project_id": "andrade-motors",
+    "storage_bucket": "andrade-motors.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:49635903984:android:b1ce3da6558b662e713535",
+        "mobilesdk_app_id": "1:957170401846:android:88753379a6b80336628e97",
         "android_client_info": {
           "package_name": "com.example.andrade_motors"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDEYN2fVv6WRKZ2U24WxFcEK9cuBHF8U5c"
+          "current_key": "AIzaSyDpJ-6HvIbsF4nn_NXb8z4mNVc6YqlZAhY"
         }
       ],
       "services": {

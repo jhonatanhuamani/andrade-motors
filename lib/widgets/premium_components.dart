@@ -1,25 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../theme/app_theme.dart';
+
+class AndradeLogo extends StatelessWidget {
+  const AndradeLogo({super.key, required this.size});
+
+  final double size;
+
+  static const _asset = 'assets/images/logo/logo_andrade_motors.png';
+
+  @override
+  Widget build(BuildContext context) {
+    final bundle = DefaultAssetBundle.of(context);
+    final fallback = SizedBox.square(
+      dimension: size,
+      child: Icon(
+        Icons.two_wheeler_rounded,
+        color: AppTheme.oro,
+        size: size * .76,
+      ),
+    );
+    return FutureBuilder<AssetManifest>(
+      future: AssetManifest.loadFromAssetBundle(bundle),
+      builder: (context, snapshot) {
+        if (snapshot.data?.getAssetVariants(_asset) == null) return fallback;
+        return Image.asset(
+          _asset,
+          bundle: bundle,
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
+          excludeFromSemantics: true,
+          errorBuilder: (_, _, _) => fallback,
+        );
+      },
+    );
+  }
+}
 
 class AndradeBrand extends StatelessWidget {
   const AndradeBrand({super.key});
   @override
   Widget build(BuildContext context) => Row(
     children: [
-      Container(
-        width: 38,
-        height: 38,
-        decoration: BoxDecoration(
-          gradient: AppTheme.gradienteOro,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: const Icon(
-          Icons.two_wheeler_rounded,
-          color: Color(0xFF231C12),
-          size: 27,
-        ),
-      ),
+      const AndradeLogo(size: 38),
       const SizedBox(width: 10),
       const Expanded(
         child: Column(
@@ -31,7 +56,8 @@ class AndradeBrand extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: 12,
+                color: AppTheme.texto,
+                fontSize: 13,
                 fontWeight: FontWeight.w900,
                 letterSpacing: .5,
               ),
@@ -43,7 +69,7 @@ class AndradeBrand extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: AppTheme.oro,
-                fontSize: 6.5,
+                fontSize: 8,
                 letterSpacing: 1.6,
                 fontWeight: FontWeight.w600,
               ),

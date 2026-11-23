@@ -66,6 +66,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/banner/
+    - assets/images/logo/
     - assets/images/productos/
     - assets/images/servicios/
 
